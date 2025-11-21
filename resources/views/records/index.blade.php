@@ -233,7 +233,7 @@ td form button {
     font-size: 11px;
     text-align: left;
     vertical-align: middle;
-    color: #333;
+    color: #727272;
     padding: 12px 5px;
     
   }
