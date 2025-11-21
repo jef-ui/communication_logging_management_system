@@ -297,6 +297,9 @@
                     <option value="Fernando De Leon" {{ old('type') == 'Fernando De Leon' ? 'selected' : '' }}>Fernando De Leon</option>
                     <option value="Anthony M. Zoleta" {{ old('type') == 'Anthony M. Zoleta' ? 'selected' : '' }}>Anthony M. Zoleta</option>
                     <option value="Wilmer Fabella" {{ old('type') == 'Wilmer Fabella' ? 'selected' : '' }}>Wilmer Fabella</option>
+                     <option value="Joe Mark A. Cabador" {{ old('type') == 'Joe Mark A. Cabador' ? 'selected' : '' }}>Joe Mark A. Cabador</option>
+                    <option value="Ray Jonmat R. La Rosa" {{ old('type') == 'Ray Jonmat R. La Rosa' ? 'selected' : '' }}>Ray Jonmat R. La Rosa</option>
+                    <option value="Rodelio Gucela Jr." {{ old('type') == 'Rodelio Gucela Jr.' ? 'selected' : '' }}>Rodelio Gucela Jr.</option>
                 </select>
             </div>
 
