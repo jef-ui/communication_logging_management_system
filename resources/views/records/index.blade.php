@@ -24,6 +24,7 @@
 
 
 body {
+  width: 100%;
   margin: 0;
   font-family: "Inter", sans-serif;
   display: flex;
@@ -118,7 +119,6 @@ body {
 table {
   border-collapse: separate;
   font-size: 0.8rem;
-
 }
 
 
@@ -219,11 +219,13 @@ td form button {
 
         /* Make header text smaller and prevent line wrap */
   #record-table th {
-    font-size: 11px;           /* Smaller font size */
-    white-space: nowrap;       /* Prevent line break */
+    font-size: 12px;           /* Smaller font size */    /* Prevent line break */
     text-align: left;
+    white-space: nowrap;
     vertical-align: middle;
     padding: 12px 15px;          /* Optional: tighter padding */
+    color: #222222;
+    font-weight: bold;
   }
 
   /* Adjust table data as well */
@@ -231,6 +233,9 @@ td form button {
     font-size: 11px;
     text-align: left;
     vertical-align: middle;
+    color: #333;
+    padding: 12px 5px;
+    
   }
 
   /* Optional: reduce icon size in table cells */
@@ -425,9 +430,10 @@ td form button {
         <th>FROM AGENCY/OFFICE</th>
         <th>TYPE</th>
         <th>SUBJECT DESCRIPTION</th>
-        <th>CONCERNED SECTION/ PERSONNEL</th>
+        <th>CONCERNED SECTION
+          <br />/ PERSONNEL</th>
         <th>ACKNOWLEDGED BY</th>
-        <th>COMPLIANCE DEADLINE</th>
+        <th>COMPLIANCE <br /> DEADLINE</th>
         <th>STATUS</th>
         {{-- <th>Delete</th> comment --}}
       </tr>
