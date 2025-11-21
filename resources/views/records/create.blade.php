@@ -6,15 +6,18 @@
     <title>OCD CLMS - Incoming Communication</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Momo+Signature&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     
 
 
 <style>
     body {
+       
         margin: 0;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: url('{{ asset('images/bg_1.png') }}') no-repeat center center fixed;
+        font-family: "Inter", sans-serif;
+        background-color: #efefef;
         background-size: cover;
         display: flex;
         flex-direction: column;
@@ -22,7 +25,7 @@
     }
 
     .topbar {
-        background-color: #030d22;
+        background-color: #0D5EA6;
         color: white;
         padding: 0.75rem 2rem;
         display: flex;
@@ -49,7 +52,15 @@
         padding: 3rem 1rem;
     }
 
+
+    .form-label {
+        font-size: 11px;
+        color: #222222;
+    }
+
     .form-container {
+  
+        font-size: 12px;
         background: rgba(255, 255, 255, 0.95);
         padding: 2rem;
         max-width: 1100px;
@@ -58,6 +69,9 @@
         grid-template-columns: repeat(3, 1fr);
         gap: 1.5rem;
         color: black; /* changed from #001F5B */
+        border: 1px solid lightgray;
+        border-radius: 10px;
+        background-color: whitesmoke;
     }
 
     .form-container h2 {
@@ -65,7 +79,7 @@
         text-align: center;
         font-size: 2rem;
         margin-bottom: 1rem;
-        color: black; /* changed from #001F5B */
+        color: #222222; /* changed from #001F5B */
         display: flex;
         align-items: center;
         justify-content: center;
@@ -79,16 +93,23 @@
         display: block;
     }
 
-    input[type="text"],
-    input[type="date"],
-    input[type="time"],
-    select {
-        width: 100%;
-        padding: 0.5rem;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 1rem;
-        background-color: white;
+input[type="text"],
+input[type="date"],
+input[type="time"],
+select {
+    font-size: 12px !important;
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: white;
+}
+
+
+    .form-select {
+        font-size: 12px;
+        border: 1px solid darkgrey;
+        border-radius: 10px;
     }
 
     .full-width {
@@ -96,11 +117,12 @@
     }
 
     button {
-        background-color: #030d22;
+        font-size: 12px;
+        background-color: #0D5EA6;
         color: white;
         padding: 0.75rem;
         border: none;
-        border-radius: 5px;
+        border-radius: 10px;
         font-size: 1rem;
         cursor: pointer;
         grid-column: span 3;
@@ -108,7 +130,7 @@
     }
 
     button:hover {
-        background-color: #FF8C00;
+        background-color: #EAA64D;
     }
 
     .footer {
@@ -123,6 +145,7 @@
     .form-container {
         grid-template-columns: 1fr !important;
         padding: 1.5rem 1rem;
+
     }
 
     .form-container h2 {
@@ -146,6 +169,7 @@
         font-size: 1rem;
     }
 }
+
 
 </style>
 
@@ -271,7 +295,7 @@
             </div>
             
             <div class="mb-3">
-                <label for="status_as_of_date" class="form-label">
+                <label for="status_as_of_date" class="form-label" style="font-size: 12px;">
                     <i class="bi bi-calendar-check-fill"></i> Status as of
                 </label>
                 <input type="date" name="status_as_of_date" id="status_as_of_date" value="{{ old('status_as_of_date') }}" class="form-control">
@@ -332,7 +356,7 @@
             
             <div class="mb-3">
                 <label for="deadline_of_compliance" class="form-label">
-                    <i class="bi bi-hourglass-split"></i> Deadline of Compliance
+                    <i class="bi bi-hourglass-split" style="font-size: 12px"></i> Deadline of Compliance
                 </label>
                 <input type="date" name="deadline_of_compliance" id="deadline_of_compliance" value="{{ old('deadline_of_compliance') }}" class="form-control">
             </div>
