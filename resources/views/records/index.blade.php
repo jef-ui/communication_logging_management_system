@@ -7,6 +7,9 @@
 
   @vite(['resources/css/app.css', 'resources/js/app.js'])
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Momo+Signature&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <style>
 
@@ -22,8 +25,7 @@
 
 body {
   margin: 0;
-  font-family: 'Arial', sans-serif;
-  min-height: 100vh;
+  font-family: "Inter", sans-serif;
   display: flex;
   flex-direction: column;
   background-color: #f4f6f8;
@@ -36,7 +38,7 @@ body {
 
 .sidebar {
   width: 200px;
-   background-color: #030d22;
+  background-color: #0D5EA6;
   color: white;
   position: fixed;
   top: 0;
@@ -114,26 +116,21 @@ body {
 }
 
 table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
+  border-collapse: separate;
   font-size: 0.8rem;
+
 }
 
-table, th, td {
-  border: 1px solid #c1c1c1;
-}
+
 
 
 th, td {
   padding: 0.4rem;
   text-align: center;
+  border-bottom: 1px solid #eeeeee;
 }
 
-th {
-  background-color: #030d22;
-  color: white;
-}
+
 
 .btn-add {
   background-color: #FF8C00;
@@ -224,26 +221,28 @@ td form button {
   #record-table th {
     font-size: 11px;           /* Smaller font size */
     white-space: nowrap;       /* Prevent line break */
-    text-align: center;
+    text-align: left;
     vertical-align: middle;
-    padding: 6px 8px;          /* Optional: tighter padding */
+    padding: 12px 15px;          /* Optional: tighter padding */
   }
 
   /* Adjust table data as well */
   #record-table td {
     font-size: 11px;
-    text-align: center;
+    text-align: left;
     vertical-align: middle;
   }
 
   /* Optional: reduce icon size in table cells */
   #record-table i {
+    width: 100%;
     font-size: 14px;
   }
 
   /* Optional: make the entire table font consistent and compact */
   #record-table {
-    font-family: Arial, sans-serif;
+      width: 100%
+      font-family: "Inter", sans-serif;
   }
 
   .delete-icon {
@@ -392,8 +391,8 @@ td form button {
   
   <!-- Add IComs Button with Icon -->
   <a href="{{ route('record.create') }}" 
-     style="background-color: #b16100; color: white; border: none; padding: 8px 15px; font-size: 14px; 
-            border-radius: 5px; text-decoration: none; display: flex; align-items: center;">
+     style="border: 1px solid #0D5EA6; color: #0D5EA6; padding: 8px 15px; font-size: 14px; 
+            border-radius: 5px; text-decoration: none; display: flex; align-items: center; font-weight: bold;">
     <i class="bi bi-plus-circle" style="margin-right: 8px;"></i> Add IComs
   </a>
 
@@ -402,9 +401,9 @@ td form button {
     <input type="text" id="search" placeholder="Search File/Documents" 
            style="padding: 8px 12px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px; height: 42px;">
     <button type="button" id="clearSearch" 
-            style="background-color: #007517; color: white; border: none; border-radius: 5px;
+            style="border: 1px solid #EAA64D; color: #EAA64D; border-radius: 5px;
                    padding: 0 20px; font-size: 14px; height: 42px; display: flex;
-                   align-items: center; justify-content: center; cursor: pointer;">
+                   align-items: center; justify-content: center; cursor: pointer;font-weight: bold;">
       <i class="bi bi-x-circle" style="margin-right: 5px;"></i> Clear
     </button>
   </div>
@@ -421,17 +420,15 @@ td form button {
   <table id="record-table">
     <thead>
       <tr>
-        <th>Date</th>
-        <th>Time</th>
-        <th>From Agency/Office</th>
-        <th>Type</th>
-        <th>Subject Description</th>
-        <th>Concerned Section/Personnel</th>
-        <th>Acknowledged By</th>
-        <th>Compliance Deadline</th>
-        <th>Status</th>
-        <th>Update Status</th>
-        <th>View File</th>
+        <th>DATE</th>
+        <th>TIME</th>
+        <th>FROM AGENCY/OFFICE</th>
+        <th>TYPE</th>
+        <th>SUBJECT DESCRIPTION</th>
+        <th>CONCERNED SECTION/ PERSONNEL</th>
+        <th>ACKNOWLEDGED BY</th>
+        <th>COMPLIANCE DEADLINE</th>
+        <th>STATUS</th>
         {{-- <th>Delete</th> comment --}}
       </tr>
     </thead>
@@ -449,26 +446,28 @@ td form button {
         <td>{{ $record->compliance_status }}</td>
 
         <td>
-    <a href="{{ route('record.edit', ['record' => $record]) }}" class="edit-icon" title="Edit">
-        <i class="bi bi-pencil-square"></i>
-    </a>
+ <a href="{{ route('record.edit', ['record' => $record]) }}" class="edit-icon" title="Edit">
+    <i class="bi bi-pencil-square" 
+       style="font-size: .9rem; color: #cd5500; cursor: pointer;"></i>
+</a>
+
 </td>
 
 
   <td>
-    <li class="list-group-item" style="list-style-type: none; padding-left: 0;">
-        @if($record->file_path)
-            <a href="{{ route('records.show', $record->id) }}" title="View">
-                <span style="display: inline-block; background-color: #cd5500; color: #fff; padding: 2px 6px; border-radius: 3px; font-size: 0.75rem;">
-                    View
-                </span>
-            </a>
-        @else
-            <span style="display: inline-block; background-color: #405161; color: #fff; padding: 2px 6px; border-radius: 3px; font-size: 0.75rem;">
-                No File
-            </span>
-        @endif
-    </li>
+<li class="list-group-item" style="list-style-type: none; padding-left: 0;">
+    @if($record->file_path)
+        <a href="{{ route('records.show', $record->id) }}" title="View">
+            <i class="bi bi-eye" 
+               style="font-size: 1.1rem; color: #cd5500; cursor: pointer;"></i>
+        </a>
+    @else
+        <i class="bi bi-file-earmark-x" 
+           style="font-size: 1.1rem; color: #405161;" 
+           title="No File"></i>
+    @endif
+</li>
+
 </td>
 
 

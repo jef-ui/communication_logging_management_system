@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Momo+Signature&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
 
 <style>
@@ -24,7 +27,7 @@
 .dropdown-menu {
     display: none;
     flex-direction: column;
-    background-color: #030d22;
+    background-color: #0D5EA6;
     padding-left: 0.5rem; /* Reduced left padding */
 }
 
@@ -46,15 +49,15 @@
     
     body {
         margin: 0;
-        font-family: 'Arial', sans-serif;
-        background-color: #eaeaea;
+        font-family: "Inter", sans-serif;
+        background-color: #EFEFEF;
     }
 
     /* Sidebar Styling */
     .sidebar {
         width: 210px;
-        background-color: #030d22;
-        color: white;
+        background-color: #0D5EA6;
+        color: #EFEFEF;
         position: fixed;
         top: 0;
         bottom: 0;
@@ -69,7 +72,6 @@
 
     .sidebar a {
         display: block;
-        color: white;
         text-decoration: none;
         margin: 1rem 0;
         font-size: 0.85rem;
@@ -79,7 +81,7 @@
 
     .sidebar a:hover {
         background-color: #f4f6f9;
-        color: #000000;
+        color: #112B3C;
     }
 
     .sidebar a.active {
@@ -406,7 +408,7 @@
                 labels: ['Male (12)', 'Female (9)'],
                 datasets: [{
                     data: [12, 9],
-                    backgroundColor: ['#007bff', '#e83e8c'],
+                    backgroundColor: ['#0D5EA6', '#FFCBCB'],
                     borderColor: '#ffffff',
                     borderWidth: 2
                 }]

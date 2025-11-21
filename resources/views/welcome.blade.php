@@ -28,7 +28,7 @@
         }
 
         .topbar {
-            background-color: #112B3C;
+            background-color: #0D5EA6;
             color: whitesmoke;
             padding: 0.75rem 2rem;
             display: flex;
@@ -44,13 +44,13 @@
         }
 
         .topbar a:hover {
-            color: orange;
+            color: #EAA64D;
         }
 
         .main-content {
             flex: 1;
             text-align: center;
-            color: #112B3C;
+            color: #222222;
             padding: 5rem 1rem;
             display: flex;
             flex-direction: column;
@@ -95,7 +95,7 @@
         }
 
         .footer {
-            background-color: #112B3C;
+            background-color: #0D5EA6;
             color: #EFEFEF;
             text-align: center;
             font-size: 12px;
@@ -139,7 +139,7 @@
         .modal-content .btn-primary {
             margin-top: 1.5rem;
             padding: 0.5rem 1.5rem;
-            background-color: #001F5B;
+            background-color: #0D5EA6;
             border: none;
             color: white;
             border-radius: 5px;

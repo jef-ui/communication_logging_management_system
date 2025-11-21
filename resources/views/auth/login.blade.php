@@ -46,7 +46,7 @@
         }
 
         .footer {
-            background-color: #112B3C;
+            background-color: #0D5EA6;
             color: #EFEFEF;
             text-align: center;
             font-size: 12px;
