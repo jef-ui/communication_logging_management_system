@@ -6,11 +6,16 @@
     <title>Login - OCD CLMS</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Momo+Signature&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
     <style>
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: url('{{ asset('images/bg_3.png') }}') no-repeat center center fixed;
+            font-family: "Inter", sans-serif;
+            background-color: #EFEFEF;
             background-size: cover;
             display: flex;
             flex-direction: column;
@@ -41,8 +46,8 @@
         }
 
         .footer {
-            background-color: white;
-            color: #003366;
+            background-color: #112B3C;
+            color: #EFEFEF;
             text-align: center;
             font-size: 12px;
             padding: 10px 0;

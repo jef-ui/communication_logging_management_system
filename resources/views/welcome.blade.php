@@ -9,24 +9,27 @@
 
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Momo+Signature&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
     <style>
         body, html {
             height: 100%;
             margin: 0;
-            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-family: "Inter", sans-serif;
         }
 
         body {
             display: flex;
             flex-direction: column;
-            background: url('{{ asset('images/bg_3.png') }}') no-repeat center center fixed;
+            background-color: #EFEFEF;
             background-size: cover;
         }
 
         .topbar {
-            background-color: #001F5B;
-            color: white;
+            background-color: #112B3C;
+            color: whitesmoke;
             padding: 0.75rem 2rem;
             display: flex;
             justify-content: space-between;
@@ -47,8 +50,7 @@
         .main-content {
             flex: 1;
             text-align: center;
-            color: white;
-            background-color: rgba(0, 0, 0, 0.5);
+            color: #112B3C;
             padding: 5rem 1rem;
             display: flex;
             flex-direction: column;
@@ -78,8 +80,8 @@
 
         .btn-login {
             background-color: transparent;
-            border: 2px solid #FF8C00;
-            color: #FF8C00;
+            border: 2px solid #F66B0E;
+            color: #112B3C;
         }
 
         .btn-login:hover {
@@ -93,8 +95,8 @@
         }
 
         .footer {
-            background-color: white;
-            color: #003366;
+            background-color: #112B3C;
+            color: #EFEFEF;
             text-align: center;
             font-size: 12px;
             padding: 10px 0;
@@ -175,17 +177,17 @@
         <div><strong>OCD CLMS</strong></div>
         <div>
             <a href="https://ocd.gov.ph/about-ocd.html">
-                <i class="bi bi-globe"></i> OCD OFFICIAL WEBPAGE
+                <i class="bi bi-globe"></i> OCD Official Website
             </a>
             <a href="{{ route('ldrrmo.index') }}">
                 <i class="bi bi-envelope-at"></i> RDRRMC MIMAROPA Directory
             </a>
             <a href="{{ asset('images/citizens-charter.png') }}">
-                <i class="bi bi-envelope-at"></i> CITIZEN'S CHARTER
+                <i class="bi bi-envelope-at"></i> Citizen's Charter
             </a>
             @if (Route::has('login'))
                 <a href="{{ asset('images/org-structure.png') }}">
-                    <i class="bi bi-box-arrow-in-right"></i> ORGANIZATIONAL STRUCTURE
+                    <i class="bi bi-box-arrow-in-right"></i> Organizational Structure
                 </a>
             @endif
         </div>
