@@ -219,12 +219,20 @@ select {
     <img src="{{ asset('images/logo.png') }}" alt="Logo" style="height: 2.5rem; width: auto; margin-right: 1rem;">
     ADD INCOMING COMMUNICATION
 </h2>
-            <div class="mb-3">
-                <label for="received_date" class="form-label">
-                    <i class="bi bi-calendar-date"></i> Received Date
-                </label>
-                <input type="date" name="received_date" id="received_date" value="{{ old('received_date') }}" class="form-control" required>
-            </div>
+
+{{-- received date --}}
+<div class="mb-3">
+    <label for="received_date" class="form-label">
+        <i class="bi bi-calendar-date"></i> Received Date
+    </label>
+    <input type="date" 
+           name="received_date" 
+           id="received_date" 
+           value="{{ old('received_date', date('Y-m-d')) }}" 
+           class="form-control" 
+           required>
+</div>
+
             
             <div class="mb-3">
                 <label for="received_time" class="form-label">
@@ -232,25 +240,32 @@ select {
                 </label>
                 <input type="time" name="received_time" id="received_time" value="{{ old('received_time') }}" class="form-control" required>
             </div>
-            
+
+
+            {{--received via  --}}
             <div class="mb-3">
                 <label for="received_via" class="form-label">
                     <i class="bi bi-envelope-paper-fill"></i> Received Via
                 </label>
                 <select name="received_via" id="received_via" class="form-select" required>
                     <option value="">-- Please select --</option>
+
                     <option value="Yahoo Mail" {{ old('received_via') == 'Yahoo Mail' ? 'selected' : '' }}>Yahoo Mail</option>
-                    <option value="Gov Mail" {{ old('received_via') == 'Gov Mail' ? 'selected' : '' }}>Gov Mail</option>
+                    
+                    <option value="Gov Mail" 
+                        {{ old('received_via', 'Gov Mail') == 'Gov Mail' ? 'selected' : '' }}>
+                        Gov Mail
+                    </option>
+
                     <option value="Fax" {{ old('received_via') == 'Fax' ? 'selected' : '' }}>Fax</option>
                     <option value="LBC" {{ old('received_via') == 'LBC' ? 'selected' : '' }}>LBC</option>
                     <option value="JNT" {{ old('received_via') == 'JNT' ? 'selected' : '' }}>JNT</option>
                     <option value="JRS" {{ old('received_via') == 'JRS' ? 'selected' : '' }}>JRS</option>
                     <option value="Hand Carried" {{ old('received_via') == 'Hand Carried' ? 'selected' : '' }}>Hand Carried</option>
-                    <option value="Viber" {{ old('received_via') == 'Viber' ? 'Viber' : '' }}>Viber</option>
-                    
+                    <option value="Viber" {{ old('received_via') == 'Viber' ? 'selected' : '' }}>Viber</option>
                 </select>
             </div>
-            
+
             <div class="mb-3">
                 <label for="from_agency_office" class="form-label">
                     <i class="bi bi-building"></i> From Agency/Office
@@ -264,16 +279,16 @@ select {
             </label>
             <select id="type" name="type" class="form-select" required>
                 <option value="">-- Please select --</option>
-                <option value="Memo" {{ old('type') == 'Memo' ? 'selected' : '' }}>Memo</option>
-                <option value="Advisory" {{ old('type') == 'Advisory' ? 'selected' : '' }}>Advisory</option>
-                <option value="Report" {{ old('type') == 'Report' ? 'selected' : '' }}>Report</option>
-                <option value="Request" {{ old('type') == 'Request' ? 'selected' : '' }}>Request</option>
-                <option value="Invitation" {{ old('type') == 'Invitation' ? 'selected' : '' }}>Invitation</option>
-                <option value="Submission" {{ old('type') == 'Submission' ? 'selected' : '' }}>Submission</option>
-                <option value="For Information" {{ old('type') == 'For Information' ? 'selected' : '' }}>For Information</option>
-                <option value="For Compliance" {{ old('type') == 'For Compliance' ? 'selected' : '' }}>For Compliance</option>
-                <option value="Complaint" {{ old('type') == 'Complaint' ? 'selected' : '' }}>Complaint</option>
-                <option value="Others" {{ old('type') == 'Others' ? 'selected' : '' }}>Others</option>
+            <option value="Report" {{ old('type', 'Report') == 'Report' ? 'selected' : '' }}>Report</option>
+            <option value="Memo" {{ old('type') == 'Memo' ? 'selected' : '' }}>Memo</option>
+            <option value="Advisory" {{ old('type') == 'Advisory' ? 'selected' : '' }}>Advisory</option>
+            <option value="Request" {{ old('type') == 'Request' ? 'selected' : '' }}>Request</option>
+            <option value="Invitation" {{ old('type') == 'Invitation' ? 'selected' : '' }}>Invitation</option>
+            <option value="Submission" {{ old('type') == 'Submission' ? 'selected' : '' }}>Submission</option>
+            <option value="For Information" {{ old('type') == 'For Information' ? 'selected' : '' }}>For Information</option>
+            <option value="For Compliance" {{ old('type') == 'For Compliance' ? 'selected' : '' }}>For Compliance</option>
+            <option value="Complaint" {{ old('type') == 'Complaint' ? 'selected' : '' }}>Complaint</option>
+            <option value="Others" {{ old('type') == 'Others' ? 'selected' : '' }}>Others</option>
             </select>
         </div>
 
@@ -307,10 +322,6 @@ select {
                 </label>
                 <select id="action_taken" name="action_taken" class="form-select" required>
                     <option value="Acknowledged and forwarded to concerned personnel" {{ old('type') == 'Acknowledged and forwarded to concerned personnel' ? 'selected' : '' }}>Acknowledged and forwarded to concerned section/personnel</option>
-                    {{-- <option value="Acknowledged and forwarded to OCD OpCen email" {{ old('type') == 'Acknowledged and forwarded to OCD OpCen email' ? 'selected' : '' }}>Acknowledged and forwarded to OCD OpCen email</option>
-                    <option value="Acknowledged and forwarded to DPS" {{ old('type') == 'Acknowledged and forwarded to DPS' ? 'selected' : '' }}>Acknowledged and forwarded to DPS</option>
-                    <option value="Acknowledged and forwarded to HRMU" {{ old('type') == 'Acknowledged and forwarded to HRMU' ? 'selected' : '' }}>Acknowledged and forwarded to HRMU</option>
-                    <option value="Acknowledged and forwarded to LGUs" {{ old('type') == 'Acknowledged and forwarded to LGUs' ? 'selected' : '' }}>Acknowledged and forwarded to LGUs</option> comment --}}
                 </select>
             </div>
             
@@ -318,9 +329,15 @@ select {
                 <label for="concerned_section_personnel" class="form-label" required>
     <i class="bi bi-diagram-3-fill"></i> Concerned Section/Personnel
 </label>
+
+{{-- concerned personnel --}}
 <select id="concerned_section_personnel" name="concerned_section_personnel" class="form-select" required>
     <option value="">-- Please select --</option>
-                    <option value="Operations Section" {{ old('type') == 'Operations Section' ? 'selected' : '' }}>Operations Section (SitReps,Advisories & etc...)</option>
+                   <option value="Operations Section" 
+    {{ old('concerned_section_personnel', 'Operations Section') == 'Operations Section' ? 'selected' : '' }}>
+    Operations Section (SitReps,Advisories & etc...)
+</option>
+
                     <option value="Administrative and Financial Management Section" {{ old('type') == 'Administrative and Financial Management Section' ? 'selected' : '' }}>Administrative and Financial Management Section</option>
                     <option value="Policy Development and Planning Section" {{ old('type') == 'Policy Development and Planning Section' ? 'selected' : '' }}>Policy Development and Planning Section</option>
                     <option value="Disaster Preparedness Section" {{ old('type') == 'Disaster Preparedness Section' ? 'selected' : '' }}>Disaster Preparedness Section</option>
@@ -366,10 +383,10 @@ select {
                     <i class="bi bi-list-check"></i> Status
                 </label>
                 <select id="compliance_status" name="compliance_status" class="form-select" required>
+                    <option value="Not Applicable" {{ old('type') == 'Not Applicable' ? 'selected' : '' }}>Not Applicable</option>
                     <option value="Compliant" {{ old('type') == 'Compliant' ? 'selected' : '' }}>Compliant</option>
                     <option value="Non-Compliant" {{ old('type') == 'Non-Compliant' ? 'selected' : '' }}>Non-Compliant</option>
                     <option value="Pending" {{ old('type') == 'Pending' ? 'selected' : '' }}>Pending</option>
-                    <option value="Not Applicable" {{ old('type') == 'Not Applicable' ? 'selected' : '' }}>Not Applicable</option>
                 </select>
             </div>
             
