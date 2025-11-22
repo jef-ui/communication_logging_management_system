@@ -314,7 +314,6 @@ select {
        class="form-control text-uppercase"
        oninput="upperNoSelect(this)"
        required>
-from_agency_office
             </div>
                     
         <div class="mb-3">
@@ -456,11 +455,6 @@ from_agency_office
            accept=".pdf,.mp4,.avi,.mov,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif"
            class="form-control">
 </div>
-
-
-
-
-
 
 
 
