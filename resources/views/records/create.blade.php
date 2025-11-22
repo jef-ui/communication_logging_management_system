@@ -262,12 +262,13 @@ select {
     <label for="received_date" class="form-label">
         <i class="bi bi-calendar-date"></i> Received Date
     </label>
-    <input type="date" 
-           name="received_date" 
-           id="received_date" 
-           value="{{ old('received_date', date('Y-m-d')) }}" 
-           class="form-control" 
-           required>
+    <input type="date"
+       name="received_date"
+       id="received_date"
+       class="form-control"
+       autocomplete="off"
+       required>
+
 </div>
 
             
@@ -593,6 +594,26 @@ function upperNoSelect(el) {
     el.setSelectionRange(start, end);
 }
 </script>
+
+
+{{-- live date received date --}}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const dateInput = document.getElementById("received_date");
+
+    // 1. If Laravel has old data from validation, keep it
+    @if(old('received_date'))
+        dateInput.value = "{{ old('received_date') }}";
+    @else
+        // 2. Delay setting the date until after Chrome autofill finishes
+        setTimeout(() => {
+            let today = new Date().toISOString().split("T")[0];
+            dateInput.value = today;
+        }, 50); // delay 50ms fixes Chrome autofill override
+    @endif
+});
+</script>
+
 
 
 
