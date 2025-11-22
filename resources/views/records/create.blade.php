@@ -203,6 +203,11 @@ select {
     to { background-position: 40px 0; }
 }
 
+.text-uppercase {
+    text-transform: uppercase;
+}
+
+
 </style>
 
 </head>
@@ -302,7 +307,14 @@ select {
                 <label for="from_agency_office" class="form-label">
                     <i class="bi bi-building"></i> From Agency/Office
                 </label>
-                <input type="text" id="from_agency_office" name="from_agency_office" value="{{ old('from_agency_office') }}" class="form-control" required>
+               <input type="text"
+       id="from_agency_office"
+       name="from_agency_office"
+       value="{{ old('from_agency_office') }}"
+       class="form-control text-uppercase"
+       oninput="upperNoSelect(this)"
+       required>
+from_agency_office
             </div>
                     
         <div class="mb-3">
@@ -575,6 +587,21 @@ document.getElementById('files').addEventListener('change', function () {
         typeSelect.addEventListener('change', toggleDateFields);
     });
 </script>
+
+<script>
+function upperNoSelect(el) {
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
+
+    el.value = el.value.toUpperCase();
+
+    // Return cursor to correct position — no blue highlight
+    el.setSelectionRange(start, end);
+}
+</script>
+
+
+
 
 
 
