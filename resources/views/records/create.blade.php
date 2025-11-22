@@ -170,6 +170,38 @@ select {
     }
 }
 
+.striped-text {
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: #1e293b;
+}
+
+.striped-track {
+    width: 100%;
+    height: 8px;
+    background: #d1d5db;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.striped-fill {
+    height: 100%;
+    width: 0%;
+    background: repeating-linear-gradient(
+        45deg,
+        #4f46e5,
+        #4f46e5 10px,
+        #6366f1 10px,
+        #6366f1 20px
+    );
+    animation: moveStripes 1s linear infinite;
+    transition: width 0.3s ease;
+}
+
+@keyframes moveStripes {
+    from { background-position: 0 0; }
+    to { background-position: 40px 0; }
+}
 
 </style>
 
@@ -332,11 +364,11 @@ select {
 
 {{-- concerned personnel --}}
 <select id="concerned_section_personnel" name="concerned_section_personnel" class="form-select" required>
-    <option value="">-- Please select --</option>
-                   <option value="Operations Section" 
-    {{ old('concerned_section_personnel', 'Operations Section') == 'Operations Section' ? 'selected' : '' }}>
-    Operations Section (SitReps,Advisories & etc...)
-</option>
+                        <option value="">-- Please select --</option>
+                                    <option value="Operations Section" 
+                        {{ old('concerned_section_personnel', 'Operations Section') == 'Operations Section' ? 'selected' : '' }}>
+                        Operations Section (SitReps,Advisories & etc...)
+                    </option>
 
                     <option value="Administrative and Financial Management Section" {{ old('type') == 'Administrative and Financial Management Section' ? 'selected' : '' }}>Administrative and Financial Management Section</option>
                     <option value="Policy Development and Planning Section" {{ old('type') == 'Policy Development and Planning Section' ? 'selected' : '' }}>Policy Development and Planning Section</option>
@@ -389,6 +421,16 @@ select {
                     <option value="Pending" {{ old('type') == 'Pending' ? 'selected' : '' }}>Pending</option>
                 </select>
             </div>
+
+            <div id="upload-progress" class="striped-box" style="display:none;">
+    <div class="striped-text">
+        Uploading <span id="upload-percent">0%</span>
+    </div>
+
+    <div class="striped-track">
+        <div id="upload-bar" class="striped-fill"></div>
+    </div>
+</div>
             
 <div class="full-width mb-3">
     <label for="files" class="form-label d-flex align-items-center">
@@ -402,6 +444,9 @@ select {
            accept=".pdf,.mp4,.avi,.mov,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif"
            class="form-control">
 </div>
+
+
+
 
 
 
@@ -431,6 +476,52 @@ select {
         }
     });
 </script>
+
+<script>
+document.getElementById('files').addEventListener('change', function () {
+    const files = this.files;
+    const limit = 10;
+
+    if (files.length > limit) {
+        alert("Maximum of 10 files allowed.");
+        this.value = "";
+        return;
+    }
+
+    // Show progress bar
+    document.getElementById('upload-progress').style.display = 'block';
+
+    let formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+        formData.append("files[]", files[i]);
+    }
+
+    let xhr = new XMLHttpRequest();
+
+    xhr.upload.addEventListener("progress", function (event) {
+        if (event.lengthComputable) {
+            let percent = Math.round((event.loaded / event.total) * 100);
+            document.getElementById('upload-percent').innerText = percent + "%";
+            document.getElementById('upload-bar').style.width = percent + "%";
+        }
+    });
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            document.getElementById('upload-percent').innerText = "Upload Complete";
+        }
+    };
+
+    // 🔴 CHANGE THIS to your Laravel route that uploads temp files
+    xhr.open("POST", "/upload-temp-files");
+
+    // Laravel CSRF Token
+    xhr.setRequestHeader("X-CSRF-TOKEN", "{{ csrf_token() }}");
+
+    xhr.send(formData);
+});
+</script>
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
