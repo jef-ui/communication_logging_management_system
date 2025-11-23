@@ -451,8 +451,6 @@ function get3DIcon(condition) {
 }
 </script>
 
-
-{{-- weather api --}}
 <script>
 const apiKey = "2348d8b4d12fe196f2a2a15310f0a7da";   // ← Replace with your API key
 
@@ -467,30 +465,42 @@ const provinces = [
 
 // Convert weather description → 3D icon file
 function get3DIcon(condition) {
-    condition = condition.toLowerCase();
+    const text = condition.toLowerCase();
 
-    if (condition.includes("clear")) {
-        return "/images/weather/sun.png";     // ☀️ Sunny
-    }
-    if (condition.includes("cloud")) {
-        return "/images/weather/cloudy.png";  // ☁️ Cloudy
-    }
-    if (condition.includes("rain")) {
-        return "/images/weather/rain.png";    // 🌧 Rain
-    }
-    if (condition.includes("thunder")) {
-        return "/images/weather/storm.png";   // ⛈ Storm
-    }
-    if (condition.includes("mist") || condition.includes("fog")) {
-        return "/images/weather/fog.png";     // 🌫 Foggy
-    }
+    // ☀ CLEAR SKY
+    if (text.includes("clear")) return "/images/weather/sun.png";
 
-    return "/images/weather/unknown.png";      // Default icon
+    // ☁ CLOUD TYPES
+    if (text.includes("overcast")) return "/images/weather/cloudy.png";
+    if (text.includes("few clouds") || text.includes("scattered")) 
+        return "/images/weather/partly.png";
+    if (text.includes("cloud")) return "/images/weather/cloudy.png";
+
+    // 🌧 RAIN TYPES
+    if (text.includes("light rain")) return "/images/weather/rain-light.png";
+    if (text.includes("moderate rain")) return "/images/weather/rain.png";
+    if (text.includes("heavy intensity rain") || text.includes("heavy rain"))
+        return "/images/weather/rain-heavy.png";
+    if (text.includes("rain")) return "/images/weather/rain.png";
+
+    // ⛈ THUNDER
+    if (text.includes("thunder")) return "/images/weather/storm.png";
+
+    // 🌫 HAZE / SMOKE / FOG
+    if (
+        text.includes("haze") ||
+        text.includes("smoke") ||
+        text.includes("mist") ||
+        text.includes("fog")
+    ) return "/images/weather/fog.png";
+
+    // ❓ DEFAULT
+    return "/images/weather/unknown.png";
 }
 
 async function loadWeatherForProvinces() {
     const weatherBox = document.getElementById("weatherBox");
-    weatherBox.innerHTML = ""; // Clear "loading..."
+    weatherBox.innerHTML = ""; // Clear old data
 
     for (const item of provinces) {
         try {
@@ -548,24 +558,29 @@ setInterval(loadWeatherForProvinces, 600000);
 
 
     <!-- Scripts -->
-    <script>
-        function updateDateTime() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString();
-            const dateString = now.toLocaleDateString(undefined, {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
+  <script>
+  function updateLiveTime() {
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+    
+    // Determine AM or PM
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    
+    // Convert to 12-hour format
+    hours = hours % 12;
+    hours = hours ? hours : 12; // Hour '0' should be '12'
+    
+    // Format time as hh:mm:ss AM/PM
+    const timeString = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds} ${ampm}`;
+    document.getElementById('liveTime').textContent = timeString;
+  }
 
-            document.getElementById('clock').textContent = timeString;
-            document.getElementById('dateDisplay').textContent = dateString;
-        }
-
-        setInterval(updateDateTime, 1000);
-        updateDateTime();
-    </script>
+  // Update time immediately and every second
+  updateLiveTime();
+  setInterval(updateLiveTime, 1000);
+</script>
 {{-- gender --}}
     <script>
         const ctx = document.getElementById('genderChart').getContext('2d');
