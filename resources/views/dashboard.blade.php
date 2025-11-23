@@ -679,16 +679,24 @@ setInterval(loadWeatherForProvinces, 600000);
 <script>
 let currentMap = "OSM"; 
 let map;
+let searchMarker = null;      // ← store current marker
+let lastSearch = null;        // ← store last searched location for auto refresh
+let autoRefreshInterval = null;
 
 // INITIALIZE DEFAULT OSM MAP
 function initOSM() {
-    document.getElementById("mapContainer").innerHTML = `<div id="map" style="width:100%; height:100%;"></div>`;
+    document.getElementById("mapContainer").innerHTML =
+        `<div id="map" style="width:100%; height:100%;"></div>`;
 
     map = L.map('map').setView([13.0, 121.0], 6);
-        
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap Contributors'
     }).addTo(map);
+
+    // Reset marker on switching map type
+    searchMarker = null;
+    lastSearch = null;
 }
 
 // SHOW WINDY EMBED
@@ -701,38 +709,50 @@ function showWindy() {
             frameborder="0" style="border-radius:10px;">
         </iframe>
     `;
+
+    // Stop auto-refresh
+    clearInterval(autoRefreshInterval);
 }
 
 // RESTORE OSM
 function showOSM() {
     currentMap = "OSM";
     initOSM();
+
+    // Resume auto-refresh for last search if exists
+    if (lastSearch) {
+        autoRefreshInterval = setInterval(() => {
+            refreshLastSearch();
+        }, 600000);
+    }
 }
 
 // SEARCH WITH WEATHER (OSM ONLY)
 async function searchLocation() {
-
     if (currentMap !== "OSM") {
-        document.getElementById("mapMessage").innerHTML = "⚠ Switch to OSM to use the search.";
+        document.getElementById("mapMessage").innerHTML =
+            "⚠ Switch to OSM to use the search.";
         return;
     }
 
     const query = document.getElementById("mapSearch").value;
 
     if (!query) {
-        document.getElementById("mapMessage").innerHTML = "⚠ Please enter a location.";
+        document.getElementById("mapMessage").innerHTML =
+            "⚠ Please enter a location.";
         return;
     }
 
     document.getElementById("mapMessage").innerHTML = "";
 
-    // NOMINATIM SEARCH
+    // Nomimatim Search
     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${query}`;
     const response = await fetch(url);
     const data = await response.json();
 
     if (data.length === 0) {
-        document.getElementById("mapMessage").innerHTML = "❌ Location not found.";
+        document.getElementById("mapMessage").innerHTML =
+            "❌ Location not found.";
         return;
     }
 
@@ -742,7 +762,9 @@ async function searchLocation() {
     map.setView([lat, lon], 13);
 
     // WEATHER API
-    const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+    const weatherUrl =
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+
     const weatherRes = await fetch(weatherUrl);
     const weatherData = await weatherRes.json();
 
@@ -750,14 +772,19 @@ async function searchLocation() {
     const temp = weatherData.main.temp.toFixed(1);
     const iconPath = get3DIcon(condition);
 
-    // MARKER
+    // REMOVE OLD MARKER FIRST
+    if (searchMarker) {
+        map.removeLayer(searchMarker);
+    }
+
+    // ADD NEW MARKER
     const weatherIcon = L.icon({
         iconUrl: iconPath,
         iconSize: [50, 50],
         iconAnchor: [25, 25]
     });
 
-    L.marker([lat, lon], { icon: weatherIcon })
+    searchMarker = L.marker([lat, lon], { icon: weatherIcon })
         .addTo(map)
         .bindPopup(`
             <strong>${query}</strong><br>
@@ -766,30 +793,65 @@ async function searchLocation() {
             ${condition}
         `)
         .openPopup();
+
+    // Save last search for auto-refresh
+    lastSearch = { query, lat, lon };
+
+    // START AUTO REFRESH
+    clearInterval(autoRefreshInterval);
+    autoRefreshInterval = setInterval(() => {
+        refreshLastSearch();
+    }, 600000);
+}
+
+// AUTO REFRESH WEATHER MARKER EVERY 10 MINUTES
+async function refreshLastSearch() {
+    if (!lastSearch || currentMap !== "OSM") return;
+
+    const { query, lat, lon } = lastSearch;
+
+    const weatherUrl =
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+
+    const res = await fetch(weatherUrl);
+    const data = await res.json();
+
+    const condition = data.weather[0].description;
+    const temp = data.main.temp.toFixed(1);
+    const iconPath = get3DIcon(condition);
+
+    // Refresh marker
+    if (searchMarker) {
+        map.removeLayer(searchMarker);
+    }
+
+    const weatherIcon = L.icon({
+        iconUrl: iconPath,
+        iconSize: [50, 50],
+        iconAnchor: [25, 25]
+    });
+
+    searchMarker = L.marker([lat, lon], { icon: weatherIcon })
+        .addTo(map)
+        .bindPopup(`
+            <strong>${query}</strong><br>
+            <img src="${iconPath}" style="width:45px;"><br>
+            <strong>${temp}°C</strong><br>
+            ${condition}
+        `);
 }
 
 // ENTER KEY SUPPORT
-document.getElementById("mapSearch").addEventListener("keydown", function(event) {
+document.getElementById("mapSearch").addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
         searchLocation();
     }
 });
 
-// Initialize default map
+// Initialize default map on load
 initOSM();
-
-// Enable Enter key for searching
-document.addEventListener("DOMContentLoaded", () => {
-    const input = document.getElementById("mapSearch");
-
-    input.addEventListener("keydown", function(event) {
-        if (event.key === "Enter") {
-            event.preventDefault(); // Avoid page refresh
-            searchLocation();
-        }
-    });
-});
+</script>
 
 </script>
 
