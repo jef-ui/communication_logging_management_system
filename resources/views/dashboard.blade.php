@@ -66,10 +66,12 @@
         padding: 1rem 0;
         margin: 0;
         transition: width 0.3s;
+        border-bottom-right-radius: 20px; 
+        border-top-right-radius: 20px; 
     }
 
     .sidebar:hover {
-        width: 230px;
+        width: 220px;
     }
 
     .sidebar a {

@@ -29,7 +29,7 @@
 
     .sidebar {
       width: 230px;
-      background-color: #030d22;
+      background-color: #0D5EA6;
       color: white;
       position: fixed;
       top: 0;
@@ -39,10 +39,12 @@
       z-index: 1000;
       overflow-y: auto;
       transition: width 0.3s ease;
+      border-bottom-right-radius: 20px; 
+      border-top-right-radius: 20px; 
     }
 
     .sidebar:hover {
-      width: 230px;
+      width: 220px;
     }
 
     .sidebar a {
