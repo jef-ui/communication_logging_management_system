@@ -369,6 +369,9 @@
         style="width:100%; background:#0D5EA6; color:white; padding:8px; border:none; border-radius:6px; margin-bottom:10px;">
         Search
     </button>
+    <div id="mapMessage" style="color:red; font-size:0.85rem; margin-bottom:8px;"></div>
+    
+
 
     <div id="map" style="width:100%; height:300px; border-radius:10px;"></div>
 </div>
@@ -670,21 +673,6 @@ setInterval(loadWeatherForProvinces, 600000);
 </script>
 
 <script>
-  function updateLiveTime() {
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const seconds = now.getSeconds().toString().padStart(2, '0');
-    const timeString = `${hours}:${minutes}:${seconds}`;
-    document.getElementById('liveTime').textContent = timeString;
-  }
-
-  // Update time immediately and every second
-  updateLiveTime();
-  setInterval(updateLiveTime, 1000);
-</script>
-
-<script>
 // INITIALIZE MAP
 var map = L.map('map').setView([13.0, 121.0], 6);
 
@@ -695,12 +683,17 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // SEARCH LOCATION WITH WEATHER ICON
 async function searchLocation() {
-    const query = document.getElementById('mapSearch').value;
+    const query = document.getElementById('mapSearch').value.trim();
+    const msg = document.getElementById('mapMessage');
+
+    msg.style.color = "red";
 
     if (!query) {
-        alert("Please enter a location.");
+        msg.textContent = "⚠ Please enter a location.";
         return;
     }
+
+    msg.textContent = "Searching...";
 
     // 1. GEOCODING — get lat/lon
     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${query}`;
@@ -708,7 +701,7 @@ async function searchLocation() {
     const data = await response.json();
 
     if (data.length === 0) {
-        alert("Location not found.");
+        msg.textContent = `❌ No results found for "${query}".`;
         return;
     }
 
@@ -728,9 +721,10 @@ async function searchLocation() {
 
     // 4. Move map
     map.setView([lat, lon], 13);
-
-    // Fix map invisible issue
     setTimeout(() => map.invalidateSize(), 200);
+
+    msg.style.color = "green";
+    msg.textContent = `✔ Showing weather for "${query}"`;
 
     // 5. CUSTOM WEATHER MARKER
     const weatherIcon = L.icon({
@@ -751,14 +745,14 @@ async function searchLocation() {
         `)
         .openPopup();
 }
-// Enable Enter key to trigger search
+
+// ENABLE ENTER KEY
 document.getElementById("mapSearch").addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
-        event.preventDefault(); // Prevent form submit/refresh
+        event.preventDefault();
         searchLocation();
     }
 });
-
 </script>
 
 
