@@ -11,6 +11,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Momo+Signature&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 
 <style>
@@ -127,6 +129,7 @@
     }
 
     .card, .gender-panel {
+        border: 0.2px solid #c2d2ff;
         background-color: white;
         padding: 1.5rem;
         border-radius: 10px;
@@ -196,6 +199,20 @@
     width: 100%; /* This will make the card take the full width */
     box-sizing: border-box; /* Ensures padding doesn't affect the width */
 }
+
+.weather-icon-3d {
+    width: 50px;
+    height: 50px;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+    transform: translateY(0);
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.weather-icon-3d:hover {
+    transform: translateY(-6px);
+    filter: drop-shadow(0 8px 12px rgba(0,0,0,0.4));
+}
+
 
 </style>
 
@@ -281,6 +298,8 @@
 </div>
 
 
+
+
         <!-- Documents for Review Card - Wider and Larger -->
         <div class="card p-3 mb-4" style="flex: 2 1 50%; min-width: 400px; max-height: 500px; overflow-y: auto; ">
              <h3 style="font-weight: bold; font-size: 1rem;">Reminder Notes/Memos</h3>
@@ -328,12 +347,32 @@
             @endif
         </div>
 
-        <!-- Gender Distribution Panel -->
-        <div class="gender-panel" style="flex: 1 1 25%; min-width: 200px;">
-             <h3 style="font-weight: bold; font-size: 0.9rem;">OCD MIMAROPA Employee Gender Distribution</h3>
-            <p>Total Employees: 21</p>
-            <canvas id="genderChart" width="200" height="200"></canvas>
-        </div>
+        <!-- Weather Conditions Panel -->
+<div class="card" style="flex: 1 1 25%; min-width: 250px; height: 450px; overflow-y: auto;">
+    <h3 style="font-weight: bold; font-size: 1rem;">MIMAROPA Weather Conditions</h3>
+
+    <div id="weatherBox">
+        <p style="color:#777;">Loading weather data...</p>
+    </div>
+</div>
+
+
+
+        <!-- Map Search Panel -->
+<div class="card" style="flex: 1 1 50%; min-width: 400px; height: 450px;">
+    <h3 style="font-weight: bold; font-size: 1rem;">Search Location & Weather</h3>
+
+    <input type="text" id="mapSearch" placeholder="Enter location..."
+        style="width:100%; padding:8px; border-radius:6px; border:1px solid #ccc; margin-bottom:10px;">
+
+    <button onclick="searchLocation()" 
+        style="width:100%; background:#0D5EA6; color:white; padding:8px; border:none; border-radius:6px; margin-bottom:10px;">
+        Search
+    </button>
+
+    <div id="map" style="width:100%; height:300px; border-radius:10px;"></div>
+</div>
+
 
         <!-- Incoming Communications Overview -->
 <div class="card" style="flex: 1 1 25%; min-width: 200px;">
@@ -362,15 +401,28 @@
     </div>
 </div>
 
+
+        <!-- Gender Distribution Panel -->
+        <div class="gender-panel" style="flex: 1 1 25%; min-width: 200px;">
+             <h3 style="font-weight: bold; font-size: 0.9rem;">OCD MIMAROPA Employee Gender Distribution</h3>
+            <p>Total Employees: 21</p>
+            <canvas id="genderChart" width="200" height="200"></canvas>
+        </div>
+{{-- weather --}}
+
+
+
         <!-- Radio Logs Totals Line Chart -->
         <div class="card" style="flex: 1 1 25%; min-width: 200px;">
              <h3 style="font-weight: bold; font-size: 1rem;">Radio Logs Overview</h3>
             <canvas id="radioLogsChart" style="max-height: 200px;"></canvas>
         </div>
+        
 
 
     </div>
 </div>
+{{-- end of Weather Conditions Panel --}}
 
 
 
@@ -379,6 +431,128 @@
 <footer class="footer">
     Designed and Developed by ICTU MIMAROPA, Office of Civil Defense MIMAROPA © 2025
 </footer>
+
+{{-- animation --}}
+<script>
+// Converts weather description to a custom 3D icon
+function get3DIcon(condition) {
+    condition = condition.toLowerCase();
+
+    if (condition.includes("clear")) {
+        return "/images/weather/sun.png";       // ☀️ Sunny
+    }
+    if (condition.includes("clouds")) {
+        return "/images/weather/cloudy.png";    // ☁️ Cloudy
+    }
+    if (condition.includes("rain")) {
+        return "/images/weather/rain.png";      // 🌧 Rainy
+    }
+    if (condition.includes("thunder")) {
+        return "/images/weather/storm.png";     // ⛈ Thunderstorm
+    }
+    if (condition.includes("mist") || condition.includes("fog")) {
+        return "/images/weather/fog.png";         // 🌫 Mist
+    }
+
+    return "/images/weather/unknown.png";        // Default icon
+}
+</script>
+
+
+{{-- weather api --}}
+<script>
+const apiKey = "2348d8b4d12fe196f2a2a15310f0a7da";   // ← Replace with your API key
+
+// Province labels + API city lookups
+const provinces = [
+    { api: "Boac", label: "Marinduque Province" },
+    { api: "Calapan", label: "Oriental Mindoro Province" },
+    { api: "Mamburao", label: "Occidental Mindoro Province" },
+    { api: "Romblon", label: "Romblon Province" },
+    { api: "Puerto Princesa", label: "Palawan Province" }
+];
+
+// Convert weather description → 3D icon file
+function get3DIcon(condition) {
+    condition = condition.toLowerCase();
+
+    if (condition.includes("clear")) {
+        return "/images/weather/sun.png";     // ☀️ Sunny
+    }
+    if (condition.includes("cloud")) {
+        return "/images/weather/cloudy.png";  // ☁️ Cloudy
+    }
+    if (condition.includes("rain")) {
+        return "/images/weather/rain.png";    // 🌧 Rain
+    }
+    if (condition.includes("thunder")) {
+        return "/images/weather/storm.png";   // ⛈ Storm
+    }
+    if (condition.includes("mist") || condition.includes("fog")) {
+        return "/images/weather/fog.png";     // 🌫 Foggy
+    }
+
+    return "/images/weather/unknown.png";      // Default icon
+}
+
+async function loadWeatherForProvinces() {
+    const weatherBox = document.getElementById("weatherBox");
+    weatherBox.innerHTML = ""; // Clear "loading..."
+
+    for (const item of provinces) {
+        try {
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${item.api},PH&appid=${apiKey}&units=metric`;
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (data.cod == 200) {
+                const temp = data.main.temp.toFixed(1);
+                const condition = data.weather[0].description;
+                const icon3d = get3DIcon(condition);
+
+                weatherBox.innerHTML += `
+                    <div style="
+                        padding:10px;
+                        border-bottom:1px solid #eee;
+                        display:flex;
+                        align-items:center;
+                    ">
+                        <img src="${icon3d}" class="weather-icon-3d">
+                        <div style="margin-left:10px;">
+                            <strong>${item.label}</strong><br>
+                            <span style="font-size:0.9rem;">
+                                ${temp}°C - ${condition}
+                            </span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                weatherBox.innerHTML += `
+                    <div style="padding:10px; border-bottom:1px solid #eee;">
+                        <strong>${item.label}</strong><br>
+                        <span style="color:red;">Weather unavailable</span>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            weatherBox.innerHTML += `
+                <div style="padding:10px; border-bottom:1px solid #eee;">
+                    <strong>${item.label}</strong><br>
+                    <span style="color:red;">Error loading weather</span>
+                </div>
+            `;
+        }
+    }
+}
+
+// Load immediately
+loadWeatherForProvinces();
+
+// Auto-refresh every 10 minutes
+setInterval(loadWeatherForProvinces, 600000);
+</script>
+
+
 
     <!-- Scripts -->
     <script>
@@ -509,6 +683,84 @@
   updateLiveTime();
   setInterval(updateLiveTime, 1000);
 </script>
+
+<script>
+// INITIALIZE MAP
+var map = L.map('map').setView([13.0, 121.0], 6);
+
+// MAP TILE LAYER (OpenStreetMap)
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap Contributors'
+}).addTo(map);
+
+// SEARCH LOCATION WITH WEATHER ICON
+async function searchLocation() {
+    const query = document.getElementById('mapSearch').value;
+
+    if (!query) {
+        alert("Please enter a location.");
+        return;
+    }
+
+    // 1. GEOCODING — get lat/lon
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${query}`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.length === 0) {
+        alert("Location not found.");
+        return;
+    }
+
+    const lat = data[0].lat;
+    const lon = data[0].lon;
+
+    // 2. WEATHER API USING LAT/LON
+    const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+    const weatherRes = await fetch(weatherUrl);
+    const weatherData = await weatherRes.json();
+
+    const condition = weatherData.weather[0].description;
+    const temp = weatherData.main.temp.toFixed(1);
+
+    // 3. Convert to 3D weather icon
+    const iconPath = get3DIcon(condition);
+
+    // 4. Move map
+    map.setView([lat, lon], 13);
+
+    // Fix map invisible issue
+    setTimeout(() => map.invalidateSize(), 200);
+
+    // 5. CUSTOM WEATHER MARKER
+    const weatherIcon = L.icon({
+        iconUrl: iconPath,
+        iconSize: [50, 50],
+        iconAnchor: [25, 25],
+        popupAnchor: [0, -20]
+    });
+
+    // 6. ADD MARKER WITH WEATHER POPUP
+    L.marker([lat, lon], { icon: weatherIcon })
+        .addTo(map)
+        .bindPopup(`
+            <strong>${query}</strong><br>
+            <img src="${iconPath}" style="width:45px; margin:5px auto; display:block;">
+            <strong>${temp}°C</strong><br>
+            <span style="font-size:0.85rem; color:#333;">${condition}</span>
+        `)
+        .openPopup();
+}
+// Enable Enter key to trigger search
+document.getElementById("mapSearch").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault(); // Prevent form submit/refresh
+        searchLocation();
+    }
+});
+
+</script>
+
 
 </body>
 </html>
