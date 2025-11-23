@@ -169,7 +169,7 @@
     #clock {
         font-size: 1.3rem; /* Slightly reduced font size for clock */
         font-weight: bold;
-        color: #0D5EA6;
+        color: #FF8C00;;
     }
 
     #dateDisplay {
@@ -278,9 +278,9 @@ Network Attached Storage (NAS)</a>
 
     <!-- Topbar -->
     <div class="topbar">
-    <div>CLMS <strong>| DASHBOARD</strong></div>
-    <div>
-        {{ date('l, F j, Y') }} - <span id="liveTime"></span>
+    <div style="color:0D5EA6"><strong style="color:#0D5EA6">CLMS | DASHBOARD</strong></div>
+    <div style="color: #0D5EA6;">
+        {{ date('l, F j, Y') }} - <span id="liveTime" style="color:#0D5EA6;"></span>
     </div>
 </div>
 
@@ -290,7 +290,7 @@ Network Attached Storage (NAS)</a>
         <!-- Welcome Card -->
         <div class="card" style="flex: 1 1 25%; min-width: 200px; display: flex; flex-direction: column;">
             <div style="flex: 1; overflow-y: auto; padding-right: 5px; font-size: 0.75rem;">
-                <h3 style="font-weight: bold; font-size: .9rem;">WELCOME, {{ Auth::user()->name }}!</h3>
+                <h3 style="font-weight: bold; font-size: .9rem;color:#0D5EA6 ">WELCOME, {{ Auth::user()->name }}!</h3>
                 <p style="margin-bottom: 0.5rem;">You're successfully logged in! Use the dashboard below to manage communication logs, 
                                                                             track records, view reminders, and access all system features.</p>
 
@@ -303,7 +303,7 @@ Network Attached Storage (NAS)</a>
         </div>
         <!-- Documents for Review Card - Wider and Larger -->
         <div class="card p-3 mb-4" style="flex: 2 1 50%; min-width: 400px; max-height: 500px; overflow-y: auto; ">
-             <h3 style="font-weight: bold; font-size: 1rem;">Reminder Notes/Memos</h3>
+             <h3 style="font-weight: bold; font-size: 1rem;color: #0D5EA6;">OFFICIAL NOTICES</h3>
             @if ($myAssignedRecords->isEmpty())
                 <p class="text-muted">No records assigned to you.</p>
             @else
@@ -327,7 +327,7 @@ Network Attached Storage (NAS)</a>
                                 <small>
                                     @if ($record->file_path || $record->file_path1 || $record->file_path2)
                                         <a href="{{ route('record.edit', $record->id) }}" title="View Status">
-                            <i class="fas fa-external-link-alt" style="color: #007bff;"></i> Status
+                            <i class="fas fa-external-link-alt" style="color: #0D5EA6;"></i> Status
                         </a>
 
                                     @else
@@ -345,7 +345,7 @@ Network Attached Storage (NAS)</a>
         </div>
         <!-- Weather Conditions Panel -->
         <div class="card" style="flex: 1 1 25%; min-width: 250px; height: 450px; overflow-y: auto;">
-            <h3 style="font-weight: bold; font-size: 1rem;">MIMAROPA Weather Conditions</h3>
+            <h3 style="font-weight: bold; font-size: 1rem;color: #0D5EA6;">MIMAROPA REAL-TIME WEATHER CONDITIONS</h3>
 
             <div id="weatherBox">
                 <p style="color:#777;">Loading weather data...</p>
@@ -353,7 +353,7 @@ Network Attached Storage (NAS)</a>
         </div>
         <!-- Map Search Panel -->
   <div class="card" style="flex: 1 1 50%; min-width: 400px; height: 450px;">
-    <h3 style="font-weight: bold; font-size: 1rem;">Search Location & Weather</h3>
+    <h3 style="font-weight: bold; font-size: 1rem; color:#0D5EA6">WEATHER MAP SEARCH</h3>
 
     <div style="display:flex; gap:8px; margin-bottom:10px;">
         <input type="text" id="mapSearch" placeholder="Enter location..."
@@ -385,7 +385,7 @@ Network Attached Storage (NAS)</a>
 
         <!-- Incoming Communications Overview -->
         <div class="card" style="flex: 1 1 25%; min-width: 200px;">
-            <h3 style="font-weight: bold; font-size: 1rem;">Incoming Communications Overview</h3>
+            <h3 style="font-weight: bold; font-size: 1rem; color:#0D5EA6;">INCOMING COMMUNICATIONS OVERVIEW</h3>
         <p style="font-weight: bold; font-size: 0.9rem; color: #030d22;">
             <i class="fas fa-envelope-open-text" style="color: #030d22; margin-right: 6px;"></i>
             Total IComs: {{ $totalIncomingLogs }}
@@ -408,13 +408,13 @@ Network Attached Storage (NAS)</a>
         </div>
         <!-- Gender Distribution Panel -->
         <div class="gender-panel" style="flex: 1 1 25%; min-width: 200px;">
-             <h3 style="font-weight: bold; font-size: 0.9rem;">OCD MIMAROPA Employee Gender Distribution</h3>
+             <h3 style="font-weight: bold; font-size: 1rem;color: #0D5EA6;">OCD MIMAROPA GENDER COMPOSITION</h3>
             <p>Total Employees: 21</p>
             <canvas id="genderChart" width="200" height="200"></canvas>
         </div>
         <!-- Radio Logs Totals Line Chart -->
         <div class="card" style="flex: 1 1 25%; min-width: 200px;">
-             <h3 style="font-weight: bold; font-size: 1rem;">Radio Logs Overview</h3>
+             <h3 style="font-weight: bold; font-size: 1rem;color: #0D5EA6">RADIO LOGS OVERVIEW</h3>
             <canvas id="radioLogsChart" style="max-height: 200px;"></canvas>
         </div>
     </div>
@@ -554,7 +554,6 @@ loadWeatherForProvinces();
 // Auto-refresh every 10 minutes
 setInterval(loadWeatherForProvinces, 600000);
 </script>
-
 
 
     <!-- Scripts -->
@@ -793,6 +792,41 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 </script>
+
+<script>
+// REAL-TIME DATE + TIME FOR WELCOME CARD
+function updateWelcomeDateTime() {
+    const now = new Date();
+
+    // DATE FORMAT
+    const dateOptions = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    };
+    document.getElementById("dateDisplay").textContent =
+        now.toLocaleDateString("en-US", dateOptions);
+
+    // TIME FORMAT (12-hour)
+    let hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    const seconds = now.getSeconds().toString().padStart(2, "0");
+    const ampm = hours >= 12 ? "PM" : "AM";
+
+    hours = hours % 12 || 12;
+    const timeText = `${hours}:${minutes}:${seconds} ${ampm}`;
+
+    document.getElementById("clock").textContent = timeText;
+}
+
+// Update every second
+setInterval(updateWelcomeDateTime, 1000);
+
+// Run now
+document.addEventListener("DOMContentLoaded", updateWelcomeDateTime);
+</script>
+
 
 
 
