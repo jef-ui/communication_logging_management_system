@@ -409,7 +409,7 @@ Network Attached Storage (NAS)</a>
         <!-- Gender Distribution Panel -->
         <div class="gender-panel" style="flex: 1 1 25%; min-width: 200px;">
              <h3 style="font-weight: bold; font-size: 1rem;color: #0D5EA6;">OCD MIMAROPA GENDER COMPOSITION</h3>
-            <p>Total Employees: 21</p>
+            <p>Total Employees: 27</p>
             <canvas id="genderChart" width="200" height="200"></canvas>
         </div>
         <!-- Radio Logs Totals Line Chart -->
@@ -586,9 +586,9 @@ setInterval(loadWeatherForProvinces, 600000);
         new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Male (12)', 'Female (9)'],
+                labels: ['Male (17)', 'Female (10)'],
                 datasets: [{
-                    data: [12, 9],
+                    data: [17, 10],
                     backgroundColor: ['#0D5EA6', '#FF8DA1'],
                     borderColor: '#ffffff',
                     borderWidth: 2
