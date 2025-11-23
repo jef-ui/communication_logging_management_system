@@ -263,6 +263,10 @@
         </div>
     </div>
 
+    <a href="https://192-168-1-10.ocd-mimaropa-nas.direct.quickconnect.to:5001/#/signin"><i class="bi bi-hdd"></i>
+</i>
+Network Attached Storage (NAS)</a>
+
     <form method="POST" action="{{ route('logout') }}" style="margin-top: 1rem;">
         @csrf
         <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">
