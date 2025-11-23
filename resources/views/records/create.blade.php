@@ -57,22 +57,35 @@
         font-size: 11px;
         color: #222222;
     }
+.form-container {
+    font-size: 12px;
+    background: whitesmoke; 
+    padding: 2rem;
+    max-width: 1100px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    color: black;
+    border-radius: 10px;
 
-    .form-container {
-  
-        font-size: 12px;
-        background: rgba(255, 255, 255, 0.95);
-        padding: 2rem;
-        max-width: 1100px;
-        width: 100%;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.5rem;
-        color: black; /* changed from #001F5B */
-        border: 1px solid lightgray;
-        border-radius: 10px;
-        background-color: whitesmoke;
-    }
+    /* 3D EFFECT */
+    border: 1px solid #dcdcdc;
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.10),      /* soft base shadow */
+        0 12px 24px rgba(0, 0, 0, 0.08);    /* deeper 3D shadow */
+    transform: translateY(0);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+/* Optional hover lift */
+.form-container:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 6px 12px rgba(0, 0, 0, 0.12),
+        0 18px 36px rgba(0, 0, 0, 0.10);
+}
+
 
     .form-container h2 {
         grid-column: span 3;

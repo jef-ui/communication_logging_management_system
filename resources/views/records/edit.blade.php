@@ -6,15 +6,19 @@
     <title>OCD CLMS - Incoming Communication</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Momo+Signature&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
 
     
-
-
 <style>
     body {
         margin: 0;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: url('{{ asset('images/bg_1.png') }}') no-repeat center center fixed;
+        font-family: "Inter", sans-serif;
+        font-size: 16px;
+        background-color: #f4f6f8;
         background-size: cover;
         display: flex;
         flex-direction: column;
@@ -22,7 +26,7 @@
     }
 
     .topbar {
-        background-color: #030d22;
+        background-color: #0a58ca;
         color: white;
         padding: 0.75rem 2rem;
         display: flex;
@@ -47,18 +51,37 @@
         justify-content: center;
         align-items: flex-start;
         padding: 3rem 1rem;
+        
     }
+.form-container {
+    background: #ffffff;
+    padding: 2rem;
+    max-width: 1100px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    color: black;
+    border-radius: 10px;
+    font-size: 11px;
 
-    .form-container {
-        background: rgba(255, 255, 255, 0.95);
-        padding: 2rem;
-        max-width: 1100px;
-        width: 100%;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.5rem;
-        color: black; /* changed from #001F5B */
-    }
+    /* 3D EFFECT */
+    border: 1px solid #e0e0e0;
+    box-shadow: 
+        0 4px 6px rgba(0, 0, 0, 0.08),      /* soft depth */
+        0 10px 20px rgba(0, 0, 0, 0.06);     /* deeper shadow */
+    transform: translateY(0);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+/* Optional hover for extra 3D interaction */
+.form-container:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 6px 10px rgba(0, 0, 0, 0.12),
+        0 14px 28px rgba(0, 0, 0, 0.10);
+}
+
 
     .form-container h2 {
         grid-column: span 3;
@@ -72,31 +95,32 @@
         gap: 0.5rem;
     }
 
-    label {
-        font-weight: 600;
-        font-size: 0.9rem;
-        margin-bottom: 0.3rem;
-        display: block;
-    }
+label {
+    font-size: 12px !important;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    display: block;
+}
 
-    input[type="text"],
-    input[type="date"],
-    input[type="time"],
-    select {
-        width: 100%;
-        padding: 0.5rem;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 1rem;
-        background-color: white;
-    }
+input[type="text"],
+input[type="date"],
+input[type="time"],
+select {
+    font-size: 12px !important;
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+}
+
 
     .full-width {
         grid-column: span 3;
     }
 
     button {
-        background-color: #030d22;
+        background-color:  #0a58ca;
         color: white;
         padding: 0.75rem;
         border: none;
@@ -108,7 +132,7 @@
     }
 
     button:hover {
-        background-color: #FF8C00;
+        background-color:#FF8C00;
     }
 
     .footer {
@@ -197,7 +221,7 @@
 </h2>
 
 <div class="mb-3">
-    <label for="received_date" class="form-label">
+    <label for="received_date" class="form-label" style="font-size: 11px;">
         <i class="bi bi-calendar-date"></i> Received Date
     </label>
     <input type="date" name="received_date" id="received_date"
@@ -217,7 +241,7 @@
 
 {{-- Subject / Description --}}
 <div class="mb-3">
-    <label for="subject_description" class="form-label">
+    <label for="subject_description" class="form-label" >
         <i class="bi bi-chat-left-text-fill"></i> Subject / Description
     </label>
     <input type="text" id="subject_description" name="subject_description"
@@ -228,7 +252,7 @@
             
             <div class="mb-3">
                 <label for="concerned_section_personnel" class="form-label" required>
-    <i class="bi bi-diagram-3-fill"></i> Concerned Section/Personnel
+    <i class="bi bi-diagram-3-fill" style="font-size: 11px;"></i> Concerned Section/Personnel
 </label>
 <select id="concerned_section_personnel" name="concerned_section_personnel" class="form-select" required>
     <option value="">-- Please select --</option>

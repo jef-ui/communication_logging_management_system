@@ -7,87 +7,122 @@
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            color: #003366;
-            padding: 40px;
-            max-width: 900px;
-            margin: auto;
-        }
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f4f7;
+    color: #003366;
+    padding: 40px;
+    max-width: 900px;
+    margin: auto;
+}
 
-        h2 {
-            text-align: center;
-            color: #003366;
-        }
+/* Title */
+h2 {
+    text-align: center;
+    color: #003366;
+}
 
-        .logo {
-            display: block;
-            margin: 0 auto 20px;
-            width: 100px;
-        }
+/* Logo */
+.logo {
+    display: block;
+    margin: 0 auto 20px;
+    width: 100px;
+}
 
-        .content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        }
+/* 3D CARD STYLE */
+.content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
 
-        .file-info {
-            margin-bottom: 20px;
-        }
+    /* 3D depth */
+    border: 1px solid #e0e0e0;
+    box-shadow:
+        0 4px 8px rgba(0, 0, 0, 0.10),
+        0 12px 24px rgba(0, 0, 0, 0.08);
 
-        .file-info p {
-            font-size: 16px;
-            color: #555;
-        }
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-        .file-view {
-            margin: 20px 0;
-            text-align: center;
-        }
+.content:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 6px 12px rgba(0, 0, 0, 0.12),
+        0 18px 36px rgba(0, 0, 0, 0.10);
+}
 
-        .back-button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #003366;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 16px;
-            margin-top: 20px;
-            width: 100%;
-        }
+/* File Title */
+.file-info p {
+    font-size: 16px;
+    color: #555;
+}
 
-        .back-button:hover {
-            background-color: #0055aa;
-        }
+/* File viewer section (also 3D) */
+.file-view {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
 
-        .download-button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 4px;
-            margin-top: 10px;
-        }
+    /* 3D */
+    border: 1px solid #e3e3e3;
+    box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.10),
+        0 8px 16px rgba(0, 0, 0, 0.06);
+}
 
-        .download-button:hover {
-            background-color: #0056b3;
-        }
+/* Main Buttons */
+.back-button,
+.download-button {
+    display: inline-block;
+    padding: 12px 20px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 16px;
+    color: white;
 
-        .footer {
-            background-color: white;
-            color: #003366;
-            text-align: center;
-            font-size: 12px;
-            padding: 5px 0;
-            margin-top: 40px;
-        }
+    /* 3D */
+    box-shadow: 
+        0 4px 6px rgba(0, 0, 0, 0.15),
+        0 6px 12px rgba(0, 0, 0, 0.10);
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+}
+
+/* Back button */
+.back-button {
+    background-color: #003366;
+}
+.back-button:hover {
+    background-color: #FF8C00;
+    transform: translateY(-3px);
+}
+
+/* Download button */
+.download-button {
+    background-color: #007bff;
+    width: auto;
+}
+.download-button:hover {
+    background-color: #FF8C00;
+    transform: translateY(-2px);
+}
+
+/* Footer */
+.footer {
+    background-color: white;
+    color: #003366;
+    text-align: center;
+    font-size: 12px;
+    padding: 10px 0;
+
+    /* 3D */
+    border-top: 1px solid #ccc;
+    box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.05);
+}
+
     </style>
 </head>
 <body>
