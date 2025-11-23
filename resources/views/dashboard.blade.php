@@ -167,7 +167,7 @@
     #clock {
         font-size: 1.3rem; /* Slightly reduced font size for clock */
         font-weight: bold;
-        color: #FF8C00;
+        color: #0D5EA6;
     }
 
     #dateDisplay {
@@ -279,156 +279,140 @@
 </div>
 
 <!-- Main Content -->
-<div class="main">
-    <div class="dashboard" style="gap: 1rem; display: flex; flex-wrap: wrap;">
-
+        <div class="main">
+            <div class="dashboard" style="gap: 1rem; display: flex; flex-wrap: wrap;">
         <!-- Welcome Card -->
- <div class="card" style="flex: 1 1 25%; min-width: 200px; display: flex; flex-direction: column;">
-    <div style="flex: 1; overflow-y: auto; padding-right: 5px; font-size: 0.75rem;">
-        <h3 style="font-weight: bold; font-size: .9rem;">WELCOME, {{ Auth::user()->name }}!</h3>
-        <p style="margin-bottom: 0.5rem;">You're successfully logged in! Use the dashboard below to manage communication logs, 
-                                                                    track records, view reminders, and access all system features.</p>
+        <div class="card" style="flex: 1 1 25%; min-width: 200px; display: flex; flex-direction: column;">
+            <div style="flex: 1; overflow-y: auto; padding-right: 5px; font-size: 0.75rem;">
+                <h3 style="font-weight: bold; font-size: .9rem;">WELCOME, {{ Auth::user()->name }}!</h3>
+                <p style="margin-bottom: 0.5rem;">You're successfully logged in! Use the dashboard below to manage communication logs, 
+                                                                            track records, view reminders, and access all system features.</p>
 
-        <h5 style="font-weight: bold; font-size: 0.8rem; margin-top: 0.75rem;">Date</h5>
-        <div id="dateDisplay"></div>
+                <h5 style="font-weight: bold; font-size: 0.8rem; margin-top: 0.75rem;">Date</h5>
+                <div id="dateDisplay"></div>
 
-        <h5 style="font-weight: bold; font-size: 0.8rem; margin-top: 0.5rem;">Time</h5>
-        <div id="clock"></div>
-    </div>
-</div>
-
-
-
-
+                <h5 style="font-weight: bold; font-size: 0.8rem; margin-top: 0.5rem;">Time</h5>
+                <div id="clock"></div>
+            </div>
+        </div>
         <!-- Documents for Review Card - Wider and Larger -->
         <div class="card p-3 mb-4" style="flex: 2 1 50%; min-width: 400px; max-height: 500px; overflow-y: auto; ">
              <h3 style="font-weight: bold; font-size: 1rem;">Reminder Notes/Memos</h3>
- 
-            
             @if ($myAssignedRecords->isEmpty())
                 <p class="text-muted">No records assigned to you.</p>
             @else
                 <ul class="list-group list-group-flush" style="max-height: 400px; overflow-y: auto;">
-                 @foreach ($myAssignedRecords as $record)
-    <li class="list-group-item">
-        {{-- Title now links to the file view --}}
-        <p></p>
-        <a href="{{ route('records.show', $record->id) }}"
-           style="color: #FF8C00; font-weight: bold;">
-            {{ $record->subject_description }}
-        </a><br>
+                                        @foreach ($myAssignedRecords as $record)
+                            <li class="list-group-item">
+                                {{-- Title now links to the file view --}}
+                                <p></p>
+                                <a href="{{ route('records.show', $record->id) }}"
+                                style="color: #0D5EA6;; font-weight: bold;">
+                                    {{ $record->subject_description }}
+                                </a><br>
 
-        {{-- Info --}}
-        <small class="text-muted">
-            <small>From: {{ $record->from_agency_office }}</small> |
-            <small>Type: {{ $record->type }}</small>
-        </small><br>
+                                {{-- Info --}}
+                                <small class="text-muted">
+                                    <small>From: {{ $record->from_agency_office }}</small> |
+                                    <small>Type: {{ $record->type }}</small>
+                                </small><br>
 
-        {{-- Status link (was View Files) --}}
-        <small>
-            @if ($record->file_path || $record->file_path1 || $record->file_path2)
-                <a href="{{ route('record.edit', $record->id) }}" title="View Status">
-    <i class="fas fa-external-link-alt" style="color: #007bff;"></i> Status
-</a>
+                                {{-- Status link (was View Files) --}}
+                                <small>
+                                    @if ($record->file_path || $record->file_path1 || $record->file_path2)
+                                        <a href="{{ route('record.edit', $record->id) }}" title="View Status">
+                            <i class="fas fa-external-link-alt" style="color: #007bff;"></i> Status
+                        </a>
 
-            @else
-                <span class="text-muted"><i class="fas fa-paperclip"></i> No Attachments</span>
-            @endif
-        </small>
-    </li>
+                                    @else
+                                        <span class="text-muted"><i class="fas fa-paperclip"></i> No Attachments</span>
+                                    @endif
+                                </small>
+                            </li>
 
-    @if (!$loop->last)
-        <hr style="border: 1px dotted rgb(221, 221, 221); margin: 5px 0;">
-    @endif
-@endforeach
-
-
+                            @if (!$loop->last)
+                                <hr style="border: 1px dotted rgb(221, 221, 221); margin: 5px 0;">
+                            @endif
+                        @endforeach
                 </ul>
             @endif
         </div>
-
         <!-- Weather Conditions Panel -->
-<div class="card" style="flex: 1 1 25%; min-width: 250px; height: 450px; overflow-y: auto;">
-    <h3 style="font-weight: bold; font-size: 1rem;">MIMAROPA Weather Conditions</h3>
+        <div class="card" style="flex: 1 1 25%; min-width: 250px; height: 450px; overflow-y: auto;">
+            <h3 style="font-weight: bold; font-size: 1rem;">MIMAROPA Weather Conditions</h3>
 
-    <div id="weatherBox">
-        <p style="color:#777;">Loading weather data...</p>
-    </div>
-</div>
-
-
-
+            <div id="weatherBox">
+                <p style="color:#777;">Loading weather data...</p>
+            </div>
+        </div>
         <!-- Map Search Panel -->
-<div class="card" style="flex: 1 1 50%; min-width: 400px; height: 450px;">
+  <div class="card" style="flex: 1 1 50%; min-width: 400px; height: 450px;">
     <h3 style="font-weight: bold; font-size: 1rem;">Search Location & Weather</h3>
 
-    <input type="text" id="mapSearch" placeholder="Enter location..."
-        style="width:100%; padding:8px; border-radius:6px; border:1px solid #ccc; margin-bottom:10px;">
+    <div style="display:flex; gap:8px; margin-bottom:10px;">
+        <input type="text" id="mapSearch" placeholder="Enter location..."
+            style="width:30%; padding:8px; border-radius:6px; border:1px solid #ccc;">
 
-    <button onclick="searchLocation()" 
-        style="width:100%; background:#0D5EA6; color:white; padding:8px; border:none; border-radius:6px; margin-bottom:10px;">
-        Search
-    </button>
-    <div id="mapMessage" style="color:red; font-size:0.85rem; margin-bottom:8px;"></div>
-    
+            {{-- 
+        <button onclick="searchLocation()" 
+            style="background:#0D5EA6; color:white; padding:8px; border:none; border-radius:6px; cursor:pointer;">
+            Search
+        </button> --}}
 
+        <button onclick="showWindy()" 
+            style="background:#0D5EA6; color:#eeeeee; padding:8px; border:1px solid rgb(110, 110, 110); border-radius:6px; cursor:pointer;">
+            Windy
+        </button>
 
-    <div id="map" style="width:100%; height:300px; border-radius:10px;"></div>
-</div>
+        <button onclick="showOSM()" 
+            style="background:#FF8C00; color:white; padding:8px; border:none; border-radius:6px; cursor:pointer;">
+            OSM
+        </button>
+    </div>
 
+    <div id="mapMessage" style="color:rgb(119, 37, 37); font-size:0.85rem; margin-bottom:8px;"></div>
 
-        <!-- Incoming Communications Overview -->
-<div class="card" style="flex: 1 1 25%; min-width: 200px;">
-    <h3 style="font-weight: bold; font-size: 1rem;">Incoming Communications Overview</h3>
-
-  <p style="font-weight: bold; font-size: 0.9rem; color: #030d22;">
-    <i class="fas fa-envelope-open-text" style="color: #030d22; margin-right: 6px;"></i>
-    Total IComs: {{ $totalIncomingLogs }}
-</p>
-
-
-    <div class="row">
-        <div class="col">
-            <p><span style="color: #007bff; font-weight: bold;">Reports:</span> {{ $typeCounts['Report'] }}</p>
-            <p><span style="color: #007bff; font-weight: bold;">Request:</span> {{ $typeCounts['Request'] }}</p>
-            <p><span style="color: #007bff; font-weight: bold;">Submission:</span> {{ $typeCounts['Submission'] }}</p>
-        </div>
-        <div class="col">
-            <p><span style="color: #007bff; font-weight: bold;">Invitation:</span> {{ $typeCounts['Invitation'] }}</p>
-            <p><span style="color: #007bff; font-weight: bold;">For Information:</span> {{ $typeCounts['For Information'] }}</p>
-        </div>
-        <div class="col">
-            <p><span style="color: #007bff; font-weight: bold;">For Compliance:</span> {{ $typeCounts['For Compliance'] }}</p>
-            <p><span style="color: #007bff; font-weight: bold;">Complaint:</span> {{ $typeCounts['Complaint'] }}</p>
-        </div>
+    <div id="mapContainer" style="width:100%; height:300px; border-radius:10px; overflow:hidden;">
+        <div id="map" style="width:100%; height:100%; border-radius:10px;"></div>
     </div>
 </div>
 
-
+        <!-- Incoming Communications Overview -->
+        <div class="card" style="flex: 1 1 25%; min-width: 200px;">
+            <h3 style="font-weight: bold; font-size: 1rem;">Incoming Communications Overview</h3>
+        <p style="font-weight: bold; font-size: 0.9rem; color: #030d22;">
+            <i class="fas fa-envelope-open-text" style="color: #030d22; margin-right: 6px;"></i>
+            Total IComs: {{ $totalIncomingLogs }}
+        </p>
+            <div class="row">
+                <div class="col">
+                    <p><span style="color: #007bff; font-weight: bold;">Reports:</span> {{ $typeCounts['Report'] }}</p>
+                    <p><span style="color: #007bff; font-weight: bold;">Request:</span> {{ $typeCounts['Request'] }}</p>
+                    <p><span style="color: #007bff; font-weight: bold;">Submission:</span> {{ $typeCounts['Submission'] }}</p>
+                </div>
+                <div class="col">
+                    <p><span style="color: #007bff; font-weight: bold;">Invitation:</span> {{ $typeCounts['Invitation'] }}</p>
+                    <p><span style="color: #007bff; font-weight: bold;">For Information:</span> {{ $typeCounts['For Information'] }}</p>
+                </div>
+                <div class="col">
+                    <p><span style="color: #007bff; font-weight: bold;">For Compliance:</span> {{ $typeCounts['For Compliance'] }}</p>
+                    <p><span style="color: #007bff; font-weight: bold;">Complaint:</span> {{ $typeCounts['Complaint'] }}</p>
+                </div>
+            </div>
+        </div>
         <!-- Gender Distribution Panel -->
         <div class="gender-panel" style="flex: 1 1 25%; min-width: 200px;">
              <h3 style="font-weight: bold; font-size: 0.9rem;">OCD MIMAROPA Employee Gender Distribution</h3>
             <p>Total Employees: 21</p>
             <canvas id="genderChart" width="200" height="200"></canvas>
         </div>
-{{-- weather --}}
-
-
-
         <!-- Radio Logs Totals Line Chart -->
         <div class="card" style="flex: 1 1 25%; min-width: 200px;">
              <h3 style="font-weight: bold; font-size: 1rem;">Radio Logs Overview</h3>
             <canvas id="radioLogsChart" style="max-height: 200px;"></canvas>
         </div>
-        
-
-
     </div>
 </div>
-{{-- end of Weather Conditions Panel --}}
-
-
-
 
 <!-- Footer -->
 <footer class="footer">
@@ -576,7 +560,7 @@ setInterval(loadWeatherForProvinces, 600000);
         setInterval(updateDateTime, 1000);
         updateDateTime();
     </script>
-
+{{-- gender --}}
     <script>
         const ctx = document.getElementById('genderChart').getContext('2d');
         new Chart(ctx, {
@@ -585,7 +569,7 @@ setInterval(loadWeatherForProvinces, 600000);
                 labels: ['Male (12)', 'Female (9)'],
                 datasets: [{
                     data: [12, 9],
-                    backgroundColor: ['#0D5EA6', '#FFCBCB'],
+                    backgroundColor: ['#0D5EA6', '#FF8DA1'],
                     borderColor: '#ffffff',
                     borderWidth: 2
                 }]
@@ -616,7 +600,7 @@ setInterval(loadWeatherForProvinces, 600000);
             }
         });
     </script>
-
+{{-- radio logs --}}
    <script>
     const radioLogsCtx = document.getElementById('radioLogsChart').getContext('2d');
 
@@ -673,87 +657,122 @@ setInterval(loadWeatherForProvinces, 600000);
 </script>
 
 <script>
-// INITIALIZE MAP
-var map = L.map('map').setView([13.0, 121.0], 6);
+let currentMap = "OSM"; 
+let map;
 
-// MAP TILE LAYER (OpenStreetMap)
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap Contributors'
-}).addTo(map);
+// INITIALIZE DEFAULT OSM MAP
+function initOSM() {
+    document.getElementById("mapContainer").innerHTML = `<div id="map" style="width:100%; height:100%;"></div>`;
 
-// SEARCH LOCATION WITH WEATHER ICON
+    map = L.map('map').setView([13.0, 121.0], 6);
+        
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap Contributors'
+    }).addTo(map);
+}
+
+// SHOW WINDY EMBED
+function showWindy() {
+    currentMap = "WINDY";
+
+    document.getElementById("mapContainer").innerHTML = `
+        <iframe width="100%" height="100%"
+            src="https://embed.windy.com/embed2.html?lat=13&lon=121&zoom=6&level=surface&overlay=wind"
+            frameborder="0" style="border-radius:10px;">
+        </iframe>
+    `;
+}
+
+// RESTORE OSM
+function showOSM() {
+    currentMap = "OSM";
+    initOSM();
+}
+
+// SEARCH WITH WEATHER (OSM ONLY)
 async function searchLocation() {
-    const query = document.getElementById('mapSearch').value.trim();
-    const msg = document.getElementById('mapMessage');
 
-    msg.style.color = "red";
-
-    if (!query) {
-        msg.textContent = "⚠ Please enter a location.";
+    if (currentMap !== "OSM") {
+        document.getElementById("mapMessage").innerHTML = "⚠ Switch to OSM to use the search.";
         return;
     }
 
-    msg.textContent = "Searching...";
+    const query = document.getElementById("mapSearch").value;
 
-    // 1. GEOCODING — get lat/lon
+    if (!query) {
+        document.getElementById("mapMessage").innerHTML = "⚠ Please enter a location.";
+        return;
+    }
+
+    document.getElementById("mapMessage").innerHTML = "";
+
+    // NOMINATIM SEARCH
     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${query}`;
     const response = await fetch(url);
     const data = await response.json();
 
     if (data.length === 0) {
-        msg.textContent = `❌ No results found for "${query}".`;
+        document.getElementById("mapMessage").innerHTML = "❌ Location not found.";
         return;
     }
 
     const lat = data[0].lat;
     const lon = data[0].lon;
 
-    // 2. WEATHER API USING LAT/LON
+    map.setView([lat, lon], 13);
+
+    // WEATHER API
     const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
     const weatherRes = await fetch(weatherUrl);
     const weatherData = await weatherRes.json();
 
     const condition = weatherData.weather[0].description;
     const temp = weatherData.main.temp.toFixed(1);
-
-    // 3. Convert to 3D weather icon
     const iconPath = get3DIcon(condition);
 
-    // 4. Move map
-    map.setView([lat, lon], 13);
-    setTimeout(() => map.invalidateSize(), 200);
-
-    msg.style.color = "green";
-    msg.textContent = `✔ Showing weather for "${query}"`;
-
-    // 5. CUSTOM WEATHER MARKER
+    // MARKER
     const weatherIcon = L.icon({
         iconUrl: iconPath,
         iconSize: [50, 50],
-        iconAnchor: [25, 25],
-        popupAnchor: [0, -20]
+        iconAnchor: [25, 25]
     });
 
-    // 6. ADD MARKER WITH WEATHER POPUP
     L.marker([lat, lon], { icon: weatherIcon })
         .addTo(map)
         .bindPopup(`
             <strong>${query}</strong><br>
-            <img src="${iconPath}" style="width:45px; margin:5px auto; display:block;">
+            <img src="${iconPath}" style="width:45px;"><br>
             <strong>${temp}°C</strong><br>
-            <span style="font-size:0.85rem; color:#333;">${condition}</span>
+            ${condition}
         `)
         .openPopup();
 }
 
-// ENABLE ENTER KEY
+// ENTER KEY SUPPORT
 document.getElementById("mapSearch").addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
         event.preventDefault();
         searchLocation();
     }
 });
+
+// Initialize default map
+initOSM();
+
+// Enable Enter key for searching
+document.addEventListener("DOMContentLoaded", () => {
+    const input = document.getElementById("mapSearch");
+
+    input.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault(); // Avoid page refresh
+            searchLocation();
+        }
+    });
+});
+
 </script>
+
 
 
 </body>
