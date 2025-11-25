@@ -228,7 +228,12 @@
     <a href="{{ route('profile.edit') }}" class="{{ request()->routeIs('profile.edit') ? 'active' : '' }}">
         <i class="bi bi-person-circle"></i> Profile
     </a>
-        
+
+    
+<a href="{{ route('weather.index') }}">
+    <i class="bi bi-wind"></i> Weather Monitoring Dashboard
+</a>
+
     <!-- Records Section Dropdown -->
     <div class="dropdown">
         <a href="#" class="dropdown-toggle">
@@ -343,15 +348,16 @@ Network Attached Storage (NAS)</a>
                 </ul>
             @endif
         </div>
-        <!-- Weather Conditions Panel -->
+        <!-- Weather Conditions Panel 
         <div class="card" style="flex: 1 1 25%; min-width: 250px; height: 450px; overflow-y: auto;">
             <h3 style="font-weight: bold; font-size: 1rem;color: #0D5EA6;">MIMAROPA REAL-TIME WEATHER CONDITIONS</h3>
 
             <div id="weatherBox">
                 <p style="color:#777;">Loading weather data...</p>
             </div>
-        </div>
-        <!-- Map Search Panel -->
+        </div> -->
+
+        <!-- Map Search Panel 
   <div class="card" style="flex: 1 1 50%; min-width: 400px; height: 450px;">
     <h3 style="font-weight: bold; font-size: 1rem; color:#0D5EA6">WEATHER MAP SEARCH</h3>
 
@@ -382,6 +388,7 @@ Network Attached Storage (NAS)</a>
         <div id="map" style="width:100%; height:100%; border-radius:10px;"></div>
     </div>
 </div>
+-->
 
         <!-- Incoming Communications Overview -->
         <div class="card" style="flex: 1 1 25%; min-width: 200px;">
@@ -676,6 +683,8 @@ setInterval(loadWeatherForProvinces, 600000);
     });
 </script>
 
+
+{{--  api 
 <script>
 let currentMap = "OSM"; 
 let map;
@@ -851,7 +860,7 @@ document.getElementById("mapSearch").addEventListener("keydown", function (event
 
 // Initialize default map on load
 initOSM();
-</script>
+</script> --}}
 
 
 <script>

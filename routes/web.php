@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RadioLogController;
 use App\Http\Controllers\RecordController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\WeatherMonitoringController;
 use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\OcdDirectoryController;
 use App\Http\Controllers\OutgoingController;
@@ -117,6 +118,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/developer', [DeveloperController::class, 'index'])->name('developer.index');
 
 
+    //
+
+    Route::get('/ocdivb/weathermonitoring',[WeatherMonitoringController::class, 'index'])->name('weather.index');
 });
  
 require __DIR__.'/auth.php';
