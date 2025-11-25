@@ -706,13 +706,14 @@ function showWindy() {
 
     document.getElementById("mapContainer").innerHTML = `
         <iframe width="100%" height="100%"
-            src="https://embed.windy.com/embed2.html?lat=13&lon=121&zoom=6&level=surface&overlay=wind"
+            src="https://embed.windy.com/embed2.html?lat=13&lon=121&zoom=6&level=surface&overlay=rain"
             frameborder="0" style="border-radius:10px;">
         </iframe>
     `;
 
     clearInterval(autoRefreshInterval);
 }
+
 
 // RESTORE OSM
 function showOSM() {
