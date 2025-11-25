@@ -351,13 +351,13 @@ Network Attached Storage (NAS)</a>
                 <p style="color:#777;">Loading weather data...</p>
             </div>
         </div>
-        <!-- Windy - OSM -->
+        <!-- Map Search Panel -->
   <div class="card" style="flex: 1 1 50%; min-width: 400px; height: 450px;">
     <h3 style="font-weight: bold; font-size: 1rem; color:#0D5EA6">WEATHER MAP SEARCH</h3>
 
     <div style="display:flex; gap:8px; margin-bottom:10px;">
-        <input type="text" id="mapSearch" placeholder="Use OSM search to check weather in any area… "
-            style="width:40%; padding:8px; border-radius:6px; border:1px solid #ccc;font-size: 12px;">
+        <input type="text" id="mapSearch" placeholder="Enter location..."
+            style="width:30%; padding:8px; border-radius:6px; border:1px solid #ccc;">
 
             {{-- 
         <button onclick="searchLocation()" 
@@ -676,13 +676,11 @@ setInterval(loadWeatherForProvinces, 600000);
     });
 </script>
 
-
-{{-- windy - osm --}}
 <script>
-let currentMap = "WINDY"; 
+let currentMap = "OSM"; 
 let map;
-let searchMarker = null;
-let lastSearch = null;
+let searchMarker = null;      // ← store current marker
+let lastSearch = null;        // ← store last searched location for auto refresh
 let autoRefreshInterval = null;
 
 // INITIALIZE DEFAULT OSM MAP
@@ -696,30 +694,32 @@ function initOSM() {
         attribution: '&copy; OpenStreetMap Contributors'
     }).addTo(map);
 
+    // Reset marker on switching map type
     searchMarker = null;
     lastSearch = null;
 }
 
-// SHOW WINDY EMBED (DEFAULT VIEW)
+// SHOW WINDY EMBED
 function showWindy() {
     currentMap = "WINDY";
 
     document.getElementById("mapContainer").innerHTML = `
         <iframe width="100%" height="100%"
-            src="https://embed.windy.com/embed2.html?lat=13&lon=121&zoom=6&level=surface&overlay=rain"
+            src="https://embed.windy.com/embed2.html?lat=13&lon=121&zoom=6&level=surface&overlay=wind"
             frameborder="0" style="border-radius:10px;">
         </iframe>
     `;
 
+    // Stop auto-refresh
     clearInterval(autoRefreshInterval);
 }
-
 
 // RESTORE OSM
 function showOSM() {
     currentMap = "OSM";
     initOSM();
 
+    // Resume auto-refresh for last search if exists
     if (lastSearch) {
         autoRefreshInterval = setInterval(() => {
             refreshLastSearch();
@@ -727,7 +727,7 @@ function showOSM() {
     }
 }
 
-// SEARCH WEATHER (OSM ONLY)
+// SEARCH WITH WEATHER (OSM ONLY)
 async function searchLocation() {
     if (currentMap !== "OSM") {
         document.getElementById("mapMessage").innerHTML =
@@ -738,19 +738,20 @@ async function searchLocation() {
     const query = document.getElementById("mapSearch").value;
 
     if (!query) {
-        document.getElementById("mapMessage").innerHTML = 
+        document.getElementById("mapMessage").innerHTML =
             "⚠ Please enter a location.";
         return;
     }
 
     document.getElementById("mapMessage").innerHTML = "";
 
+    // Nomimatim Search
     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${query}`;
     const response = await fetch(url);
     const data = await response.json();
 
     if (data.length === 0) {
-        document.getElementById("mapMessage").innerHTML = 
+        document.getElementById("mapMessage").innerHTML =
             "❌ Location not found.";
         return;
     }
@@ -760,6 +761,7 @@ async function searchLocation() {
 
     map.setView([lat, lon], 13);
 
+    // WEATHER API
     const weatherUrl =
         `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
 
@@ -770,10 +772,12 @@ async function searchLocation() {
     const temp = weatherData.main.temp.toFixed(1);
     const iconPath = get3DIcon(condition);
 
+    // REMOVE OLD MARKER FIRST
     if (searchMarker) {
         map.removeLayer(searchMarker);
     }
 
+    // ADD NEW MARKER
     const weatherIcon = L.icon({
         iconUrl: iconPath,
         iconSize: [50, 50],
@@ -790,15 +794,17 @@ async function searchLocation() {
         `)
         .openPopup();
 
+    // Save last search for auto-refresh
     lastSearch = { query, lat, lon };
 
+    // START AUTO REFRESH
     clearInterval(autoRefreshInterval);
     autoRefreshInterval = setInterval(() => {
         refreshLastSearch();
     }, 600000);
 }
 
-// AUTO REFRESH SEARCH MARKER
+// AUTO REFRESH WEATHER MARKER EVERY 10 MINUTES
 async function refreshLastSearch() {
     if (!lastSearch || currentMap !== "OSM") return;
 
@@ -814,6 +820,7 @@ async function refreshLastSearch() {
     const temp = data.main.temp.toFixed(1);
     const iconPath = get3DIcon(condition);
 
+    // Refresh marker
     if (searchMarker) {
         map.removeLayer(searchMarker);
     }
@@ -834,7 +841,7 @@ async function refreshLastSearch() {
         `);
 }
 
-// ENTER KEY
+// ENTER KEY SUPPORT
 document.getElementById("mapSearch").addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
@@ -842,23 +849,43 @@ document.getElementById("mapSearch").addEventListener("keydown", function (event
     }
 });
 
-// DEFAULT START VIEW — WINDY
-showWindy();
+// Initialize default map on load
+initOSM();
 </script>
+
+
+<script>
+// REAL-TIME DATE + TIME FOR WELCOME CARD
+function updateWelcomeDateTime() {
+    const now = new Date();
+
+    // DATE FORMAT
+    const dateOptions = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    };
+    document.getElementById("dateDisplay").textContent =
+        now.toLocaleDateString("en-US", dateOptions);
+
+    // TIME FORMAT (12-hour)
+    let hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    const seconds = now.getSeconds().toString().padStart(2, "0");
+    const ampm = hours >= 12 ? "PM" : "AM";
+
+    hours = hours % 12 || 12;
+    const timeText = `${hours}:${minutes}:${seconds} ${ampm}`;
+
+    document.getElementById("clock").textContent = timeText;
+}
 
 // Update every second
 setInterval(updateWelcomeDateTime, 1000);
 
 // Run now
 document.addEventListener("DOMContentLoaded", updateWelcomeDateTime);
-</script>
-
-{{-- keep alive dashboard --}}
-<script>
-setInterval(() => {
-    fetch("/keep-alive")
-        .then(response => console.log("Session refreshed"));
-}, 300000); // 300,000 ms = 5 minutes
 </script>
 
 

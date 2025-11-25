@@ -117,13 +117,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/developer', [DeveloperController::class, 'index'])->name('developer.index');
 
 
-    //Keep Alive Dashboard
-    Route::get('/keep-alive', function () {
-    return response()->json(['status' => 'alive']);
-})->middleware('auth');
-
-
-
 });
  
 require __DIR__.'/auth.php';
