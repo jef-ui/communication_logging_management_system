@@ -41,7 +41,7 @@
             
             display: flex;
             flex-direction: row;
-                    background-color: #0d0d0d;
+            background-color: #0d0d0d;
             width: 100%;
             height: 400px;
             gap: 10px;
@@ -112,15 +112,19 @@
 
         .secondary-card1 {
             background-color: rgb(55, 15, 67);
-            width: 40%;
+            width: 30%;
             height: 200px;
         }
 
         .secondary-card2 {
-            background-color: rgb(55, 15, 67);
-            width: 70%;
+            width: 40%;
             height: 200px;
+            border: 1px solid #2B2B2B;
         }
+
+        
+
+        
 
         
 
@@ -154,7 +158,7 @@
         }
 
         .footer p {
-            font-size: 10px;
+            font-size: 12px;
             color: rgb(215, 215, 215);
         }
 
@@ -162,6 +166,13 @@
             display: flex;
             align-items: center;
             justify-content: center;    
+        }
+
+        .card {
+            margin-top: 20px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
 
@@ -184,13 +195,7 @@
                   <h4 class="windy">MIMAROPA Real-Time Weather Condition</h4>
                  <div class="card1-container">
     <!-- Weather Conditions Panel -->
-    <div class="card" 
-        style="flex: 1 1 25%; 
-               min-width: 250px; 
-               height: 450px; 
-               overflow-y: auto;
-               border-radius:12px; 
-               padding:10px;">
+    <div class="card">
         <div id="weatherBox">
             <p style="color:#777;">Loading weather data...</p>
         </div>
@@ -233,7 +238,7 @@
         <div class="secondary-container">
          <div class="secondary-card1" id="liveClockContainer" 
      style="display:flex; flex-direction:column; justify-content:center; align-items:center; 
-            background:#2B2B2B; border-radius:12px;">
+            background:#2B2B2B;">
 
     <div id="liveTime" 
         style="font-size:55px; font-weight:bold; color:#FFA500; text-shadow:0 0 10px #ff8c00;">
@@ -247,17 +252,24 @@
 
 </div>
   
-<div class="secondary-card2" 
-     style="border-radius:12px; padding:15px; background:transparent;">
+<div class="secondary-card2" >
+     
+        <h4 class="windy" style="color:rgb(215, 215, 215)">PHILIPPINE DISASTER NEWS (Live Headlines)</h4>
+    
 
-    <h3 style="color:rgb(215, 215, 215); font-size:1rem; font-weight:300;">
-        MIMAROPA RAINFALL (Last 3 Hours)
-    </h3>
+    <ul id="newsList" style="margin-top:10px; list-style:none; padding-left:0;">
+        <!-- News headlines will appear here -->
+    </ul>
+</div>
 
-    <canvas id="rainfallChart" 
+<div class="secondary-card2" >
+     <h4 class="windy" style="color:rgb(215, 215, 215)">Rainfall Chart</h4>
+      <canvas id="rainfallChart" 
         style="width:100%; height:160px; margin-top:10px;"></canvas>
 
 </div>
+
+
 
 
         </div>    
@@ -298,22 +310,46 @@ const provinces = [
 function get3DIcon(condition) {
     const text = condition.toLowerCase();
 
-    if (text.includes("clear")) return "/images/weather/sun.png";
-    if (text.includes("overcast")) return "/images/weather/cloudy.png";
-    if (text.includes("few clouds") || text.includes("scattered")) 
-        return "/images/weather/partly.png";
-    if (text.includes("cloud")) return "/images/weather/cloudy.png";
+  if (text.includes("clear")) 
+    return "/images/weather/sun.png";
 
-    if (text.includes("light rain")) return "/images/weather/rain-light.png";
-    if (text.includes("moderate rain")) return "/images/weather/rain.png";
-    if (text.includes("heavy rain")) return "/images/weather/rain-heavy.png";
-    if (text.includes("rain")) return "/images/weather/rain.png";
+// ☁ OVERCAST CLOUDS
+if (text.includes("overcast")) 
+    return "/images/weather/overcast.png";   // ← NEW (use a more solid cloud icon)
 
-    if (text.includes("thunder")) return "/images/weather/storm.png";
+// 🌤 FEW / SCATTERED CLOUDS
+if (text.includes("few clouds") || text.includes("scattered")) 
+    return "/images/weather/partly.png";
 
-    if (text.includes("haze") || text.includes("smoke") ||
-        text.includes("mist") || text.includes("fog")) 
-        return "/images/weather/fog.png";
+// ⛅ BROKEN CLOUDS (very important for accuracy)
+if (text.includes("broken")) 
+    return "/images/weather/broken.png";     // ← NEW icon file
+
+// ☁ GENERAL CLOUDS (fallback)
+if (text.includes("cloud")) 
+    return "/images/weather/cloudy.png";
+
+// 🌧 LIGHT / MODERATE / HEAVY RAIN
+if (text.includes("light rain")) 
+    return "/images/weather/rain-light.png";
+
+if (text.includes("moderate rain")) 
+    return "/images/weather/rain.png";
+
+if (text.includes("heavy rain")) 
+    return "/images/weather/rain-heavy.png";
+
+if (text.includes("rain")) 
+    return "/images/weather/rain.png";
+
+// ⛈ THUNDERSTORM
+if (text.includes("thunder")) 
+    return "/images/weather/storm.png";
+
+// 🌫 HAZE / SMOKE / MIST / FOG
+if (text.includes("haze") || text.includes("smoke") ||
+    text.includes("mist") || text.includes("fog")) 
+    return "/images/weather/fog.png";
 
     return "/images/weather/unknown.png";
 }
@@ -409,6 +445,7 @@ updateClock();
 setInterval(updateClock, 1000);
 </script>
 
+
 <script>
 async function loadRainfallData() {
     const apiKey = "2348d8b4d12fe196f2a2a15310f0a7da";
@@ -493,6 +530,64 @@ async function loadRainfallData() {
 
 loadRainfallData();
 setInterval(loadRainfallData, 600000);
+</script>
+
+
+
+<script>
+const newsKey = "4ad9132c35c6447a899b871d7e5b0ebb"; // ← replace with your NewsAPI.org key
+
+async function loadPHDisasterNews() {
+    const url = `https://newsapi.org/v2/top-headlines?country=ph&q=disaster OR typhoon OR earthquake OR flood OR weather&apiKey=${newsKey}`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        const newsList = document.getElementById("newsList");
+        newsList.innerHTML = ""; 
+
+        if (!data.articles || data.articles.length === 0) {
+            newsList.innerHTML = `
+                <li style="color:gray; font-size:0.9rem;">No news available.</li>
+            `;
+            return;
+        }
+
+        // Show only the first 5 headlines
+        data.articles.slice(0, 5).forEach(article => {
+            const item = document.createElement("li");
+            item.style.marginBottom = "10px";
+
+            item.innerHTML = `
+                <a href="${article.url}" 
+                   target="_blank" 
+                   style="color:#ff8c00; text-decoration:none; font-size:0.85rem;">
+                    • ${article.title}
+                </a>
+            `;
+
+            newsList.appendChild(item);
+        });
+
+    } catch (err) {
+        console.error("Error loading news:", err);
+        document.getElementById("newsList").innerHTML =
+            `<li style="color:gray;">Unable to load news.</li>`;
+    }
+}
+
+// Load immediately
+loadPHDisasterNews();
+
+// Reload every 10 minutes
+setInterval(loadPHDisasterNews, 600000);
+</script>
+
+<script>
+    setInterval(() => {
+    location.reload(true); // full page reload (same as CTRL+R)
+}, 300000); // 10,000 ms = 10 seconds
 </script>
 
 
