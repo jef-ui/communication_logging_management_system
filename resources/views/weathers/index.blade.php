@@ -167,10 +167,7 @@
         .footer {
             display: flex;
             align-items: center;
-            justify-content: center;  
-            background-color: #2B2B2B;
-            height: 20px;  
-            font-family: "Inter", sans-serif;
+            justify-content: center;    
         }
 
         .card {
@@ -180,6 +177,28 @@
             align-items: center;
             text-align: left;
         }
+
+
+        /* scroll */
+        /* Black Scrollbar */
+.secondary-card2::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.secondary-card2::-webkit-scrollbar-track {
+    background: #1a1a1a;   /* dark track */
+    border-radius: 4px;
+}
+
+.secondary-card2::-webkit-scrollbar-thumb {
+    background: #000;      /* pure black thumb */
+    border-radius: 4px;
+}
+
+.secondary-card2::-webkit-scrollbar-thumb:hover {
+    background: #333;      /* slightly lighter on hover */
+}
 
 
 
@@ -272,28 +291,30 @@
     </ul>
 </div>
 
-<div class="secondary-card2" >
+<div class="secondary-card2" 
+     style="height:200px; overflow-x:auto; position:relative;">
+     
      <h4 class="windy" style="color:rgb(215, 215, 215)">MIMAROPA Heat Index Monitoring</h4>
-      <canvas id="rainfallChart" 
-        style="width:100%; height:160px; margin-top:10px;"></canvas>
+
+     <canvas id="rainfallChart" 
+             style="height:10px !important;"></canvas>
 
 </div>
 
 
 
 
+
         </div>    
 
-
-
-    
-    </div>
-
-            
+        
     <div class="footer">
         <p>Designed and Developed by ICTU MIMAROPA, Office of Civil Defense MIMAROPA © 2025</p>
     </div>
 
+
+    
+    </div>
 
     </div> 
 <script>
