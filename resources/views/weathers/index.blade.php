@@ -167,7 +167,10 @@
         .footer {
             display: flex;
             align-items: center;
-            justify-content: center;    
+            justify-content: center;  
+            background-color: #2B2B2B;
+            height: 20px;  
+            font-family: "Inter", sans-serif;
         }
 
         .card {
@@ -175,6 +178,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            text-align: left;
         }
 
 
@@ -209,13 +213,14 @@
                     <h4 class="windy">Windy Weather Map</h4>
                     {{-- windy --}}
                     <div class="windy-map" id="windyMapContainer">
-                        <iframe
-                            id="windyMapFrame"
-                            src="https://embed.windy.com/embed2.html?lat=13.0&lon=121.0&zoom=6&level=surface&overlay=rain&product=ecmwf&menu=&message=true&marker=&calendar=&pressure=&type=map&location=coordinates&detail=&metricWind=knots&metricTemp=c"
-                            frameborder="0"
-                            width="100%"
-                            height="100%">
-                        </iframe>
+      <iframe
+    id="windyMapFrame"
+    src="https://embed.windy.com/embed2.html?lat=13.0&lon=122.0&zoom=5&level=surface&overlay=rain&product=ecmwf&menu=&message=true&marker=&calendar=&pressure=&type=map&location=coordinates&detail=&metricWind=knots&metricTemp=c"
+    frameborder="0"
+    width="100%"
+    height="100%">
+</iframe>
+
                     </div>
                 </div>  
                 {{-- windyend --}}
@@ -224,13 +229,16 @@
                     <h4 class="windy">Satellite</h4>
                     {{-- windy --}}
              <div class="windy-map" id="windyMapContainer">
-    <iframe
-        id="windyMapFrame"
-        src="https://embed.windy.com/embed2.html?lat=13.0&lon=121.0&zoom=6&level=surface&overlay=satellite&product=ecmwf&tcinfo=1&menu=&message=true&marker=&calendar=&pressure=&type=map&location=coordinates&detail=&metricWind=knots&metricTemp=c"
-        frameborder="0"
-        width="100%"
-        height="100%">
-    </iframe>
+<iframe
+    id="windyMapFrame"
+    src="https://embed.windy.com/embed2.html?lat=13.0&lon=121.0&zoom=4&level=surface&overlay=satellite&product=ecmwf&tcinfo=1&menu=&message=true&marker=&calendar=&pressure=&type=map&location=coordinates&detail=&metricWind=knots&metricTemp=c"
+    frameborder="0"
+    width="100%"
+    height="100%">
+</iframe>
+
+
+
 </div>
 
                 </div>  
@@ -265,7 +273,7 @@
 </div>
 
 <div class="secondary-card2" >
-     <h4 class="windy" style="color:rgb(215, 215, 215)">Rainfall Chart</h4>
+     <h4 class="windy" style="color:rgb(215, 215, 215)">MIMAROPA Heat Index Monitoring</h4>
       <canvas id="rainfallChart" 
         style="width:100%; height:160px; margin-top:10px;"></canvas>
 
@@ -276,14 +284,16 @@
 
         </div>    
 
-        
-    <div class="footer">
-        <p>Designed and Developed by ICTU MIMAROPA, Office of Civil Defense MIMAROPA © 2025</p>
-    </div>
 
 
     
     </div>
+
+            
+    <div class="footer">
+        <p>Designed and Developed by ICTU MIMAROPA, Office of Civil Defense MIMAROPA © 2025</p>
+    </div>
+
 
     </div> 
 <script>
@@ -449,7 +459,7 @@ setInterval(updateClock, 1000);
 
 
 <script>
-async function loadRainfallData() {
+async function loadHeatIndex() {
     const apiKey = "2348d8b4d12fe196f2a2a15310f0a7da";
 
     const provinces = [
@@ -461,7 +471,7 @@ async function loadRainfallData() {
     ];
 
     let labels = [];
-    let rainfallValues = [];
+    let heatIndexValues = [];
 
     for (const p of provinces) {
         try {
@@ -469,33 +479,40 @@ async function loadRainfallData() {
             const res = await fetch(url);
             const data = await res.json();
 
-            let rainValue = 0;
-            if (data.rain && data.rain["3h"]) {
-                rainValue = data.rain["3h"];
-            }
+            const T = data.main.temp;
+            const RH = data.main.humidity;
+
+            // Heat Index formula
+            const HI = 
+                -8.784 + 
+                1.611 * T +
+                2.338 * RH -
+                0.146 * T * RH -
+                0.0123 * (T*T) -
+                0.0164 * (RH*RH) +
+                0.00221 * (T*T) * RH +
+                0.000725 * T * (RH*RH);
 
             labels.push(p.label);
-            rainfallValues.push(rainValue);
+            heatIndexValues.push(HI.toFixed(1));
 
         } catch (err) {
             labels.push(p.label);
-            rainfallValues.push(0);
+            heatIndexValues.push(0);
         }
     }
 
     const ctx = document.getElementById("rainfallChart").getContext("2d");
 
-    if (window.rainLineChart) {
-        window.rainLineChart.destroy();
-    }
+    if (window.heatChart) window.heatChart.destroy();
 
-    window.rainLineChart = new Chart(ctx, {
+    window.heatChart = new Chart(ctx, {
         type: "line",
         data: {
             labels: labels,
             datasets: [{
-                label: "Rainfall (mm)",
-                data: rainfallValues,
+                label: "Heat Index (°C)",
+                data: heatIndexValues,
                 borderColor: "#FFA500",
                 backgroundColor: "transparent",
                 borderWidth: 3,
@@ -507,6 +524,7 @@ async function loadRainfallData() {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,   // ⭐ fixes compression
             plugins: {
                 legend: {
                     labels: {
@@ -517,7 +535,7 @@ async function loadRainfallData() {
             },
             scales: {
                 y: {
-                    beginAtZero: true,
+                    beginAtZero: false,
                     grid: { color: "rgba(255,165,0,0.15)" },
                     ticks: { color: "#FFA500" }
                 },
@@ -530,9 +548,10 @@ async function loadRainfallData() {
     });
 }
 
-loadRainfallData();
-setInterval(loadRainfallData, 600000);
+loadHeatIndex();
+setInterval(loadHeatIndex, 600000);
 </script>
+
 
 
 
