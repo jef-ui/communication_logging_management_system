@@ -19,6 +19,8 @@
         .dashboard {
             background-color: #0d0d0d;
             display: flex;
+            justify-content: center;
+            text-align: center;
             flex-direction: column;
             width: 100%;
             height: 100vh;
