@@ -293,7 +293,7 @@
   
 <div class="secondary-card-alert" >
      
-        <h4 class="windy" style="color: rgb(215, 215, 215">RDRRMC MIMAROPA Alert Level</h4>
+        <h4 class="windy" style="color: rgb(215, 215, 215">RDRRMC MIMAROPA Alert Status</h4>
         <h1 class="alert-level">BLUE</h1>
         <span style="color: white;font-weight: bold;font-size: 30px;">ALERT</span>
         
