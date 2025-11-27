@@ -114,22 +114,32 @@
 
         .secondary-card1 {
             background-color: rgb(55, 15, 67);
-            width: 30%;
+            width: 25%;
             height: 200px;
         }
 
         .secondary-card2 {
-            width: 40%;
+            width: 30%;
             height: 200px;
             border: 1px solid #2B2B2B;
         }
 
         
+        .secondary-card-alert {
+            width: 25%;
+            height: 200px;
+            border: 1px solid #2B2B2B;
+            background-color: blue;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
+        .alert-level {
+            color: white;
+            font-size: 100px;
+        }
         
-
-        
-
         .main-header {
             display: flex;
             flex-direction: row;
@@ -229,7 +239,7 @@
 
             </div>
                 <div class="card2">
-                    <h4 class="windy">Windy Weather Map</h4>
+                    <h4 class="windy">Windy Weather Map (Rain & Thunder)</h4>
                     {{-- windy --}}
                     <div class="windy-map" id="windyMapContainer">
       <iframe
@@ -245,12 +255,12 @@
                 {{-- windyend --}}
 
               <div class="card2">
-                    <h4 class="windy">Satellite</h4>
+                    <h4 class="windy">Windy Weather Map (Wind)</h4>
                     {{-- windy --}}
              <div class="windy-map" id="windyMapContainer">
 <iframe
     id="windyMapFrame"
-    src="https://embed.windy.com/embed2.html?lat=13.0&lon=121.0&zoom=4&level=surface&overlay=satellite&product=ecmwf&tcinfo=1&menu=&message=true&marker=&calendar=&pressure=&type=map&location=coordinates&detail=&metricWind=knots&metricTemp=c"
+ src="https://embed.windy.com/embed2.html?lat=13.0&lon=121.0&zoom=4&level=surface&overlay=wind&product=ecmwf&tcinfo=1&menu=&message=true&marker=&calendar=&pressure=&type=map&location=coordinates&detail=&metricWind=knots&metricTemp=c"
     frameborder="0"
     width="100%"
     height="100%">
@@ -281,6 +291,23 @@
 
 </div>
   
+<div class="secondary-card-alert" >
+     
+        <h4 class="windy" style="color: rgb(215, 215, 215">RDRRMC MIMAROPA Alert Level</h4>
+        <h1 class="alert-level">BLUE</h1>
+        <span style="color: white;font-weight: bold;font-size: 30px;">ALERT</span>
+        
+</div>
+
+<div class="secondary-card2" 
+     style="height:200px; overflow-x:auto; position:relative;">
+     
+     <h4 class="windy" style="color:rgb(215, 215, 215)">MIMAROPA Heat Index Monitoring</h4>
+
+     <canvas id="rainfallChart" 
+             style="height:10px !important;"></canvas>
+</div>
+
 <div class="secondary-card2" >
      
         <h4 class="windy" style="color:rgb(215, 215, 215)">PHILIPPINE DISASTER NEWS (Live Headlines)</h4>
@@ -291,15 +318,6 @@
     </ul>
 </div>
 
-<div class="secondary-card2" 
-     style="height:200px; overflow-x:auto; position:relative;">
-     
-     <h4 class="windy" style="color:rgb(215, 215, 215)">MIMAROPA Heat Index Monitoring</h4>
-
-     <canvas id="rainfallChart" 
-             style="height:10px !important;"></canvas>
-
-</div>
 
 
 
