@@ -300,13 +300,13 @@
 </div>
 
 <div class="secondary-card2" 
-     style="height:200px; overflow-x:auto; position:relative;">
-     
+     style="height:200px; overflow-y:auto; padding:10px;">
+
      <h4 class="windy" style="color:rgb(215, 215, 215)">MIMAROPA Heat Index Monitoring</h4>
 
-     <canvas id="rainfallChart" 
-             style="height:10px !important;"></canvas>
+     <div id="heatIndexList" style="margin-top:10px;"></div>
 </div>
+
 
 <div class="secondary-card2" >
      
@@ -509,8 +509,8 @@ async function loadHeatIndex() {
         { api: "Puerto Princesa", label: "Palawan" }
     ];
 
-    let labels = [];
-    let heatIndexValues = [];
+    const container = document.getElementById("heatIndexList");
+    container.innerHTML = ""; // clear content
 
     for (const p of provinces) {
         try {
@@ -521,9 +521,9 @@ async function loadHeatIndex() {
             const T = data.main.temp;
             const RH = data.main.humidity;
 
-            // Heat Index formula
-            const HI = 
-                -8.784 + 
+            // Heat Index Formula
+            const HI =
+                -8.784 +
                 1.611 * T +
                 2.338 * RH -
                 0.146 * T * RH -
@@ -532,64 +532,35 @@ async function loadHeatIndex() {
                 0.00221 * (T*T) * RH +
                 0.000725 * T * (RH*RH);
 
-            labels.push(p.label);
-            heatIndexValues.push(HI.toFixed(1));
+            const item = document.createElement("div");
+            item.style.color = "white";
+            item.style.fontSize = "14px";
+            item.style.margin = "6px 0";
+            item.style.padding = "6px";
+            item.style.borderBottom = "1px solid rgba(255,255,255,0.1)";
+
+            item.innerHTML = `
+                <strong>${p.label}</strong><br>
+                Heat Index: <span style="color:#FFA500;">${HI.toFixed(1)} °C</span><br>
+                Temp: ${T.toFixed(1)} °C &nbsp;&nbsp; | &nbsp;&nbsp; Humidity: ${RH}% 
+            `;
+
+            container.appendChild(item);
 
         } catch (err) {
-            labels.push(p.label);
-            heatIndexValues.push(0);
+            const item = document.createElement("div");
+            item.style.color = "white";
+            item.style.fontSize = "14px";
+            item.innerHTML = `<strong>${p.label}</strong> — Data unavailable`;
+            container.appendChild(item);
         }
     }
-
-    const ctx = document.getElementById("rainfallChart").getContext("2d");
-
-    if (window.heatChart) window.heatChart.destroy();
-
-    window.heatChart = new Chart(ctx, {
-        type: "line",
-        data: {
-            labels: labels,
-            datasets: [{
-                label: "Heat Index (°C)",
-                data: heatIndexValues,
-                borderColor: "#FFA500",
-                backgroundColor: "transparent",
-                borderWidth: 3,
-                tension: 0.3,
-                pointRadius: 4,
-                pointBackgroundColor: "#FFA500",
-                pointBorderColor: "#FFA500"
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,   // ⭐ fixes compression
-            plugins: {
-                legend: {
-                    labels: {
-                        color: "#FFA500",
-                        font: { size: 12 }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: false,
-                    grid: { color: "rgba(255,165,0,0.15)" },
-                    ticks: { color: "#FFA500" }
-                },
-                x: {
-                    grid: { display: false },
-                    ticks: { color: "#FFA500" }
-                }
-            }
-        }
-    });
 }
 
 loadHeatIndex();
 setInterval(loadHeatIndex, 600000);
 </script>
+
 
 
 
