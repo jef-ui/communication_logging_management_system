@@ -233,7 +233,7 @@
 
         <div class="main-container">
             <div class="card1">
-                  <h4 class="windy">MIMAROPA Real-Time Weather Condition</h4>
+                  <h4 class="windy">MIMAROPA Real-Time Weather Situation</h4>
                  <div class="card1-container">
                         <!-- Weather Conditions Panel -->
                         <div class="card">
@@ -280,9 +280,29 @@
 
         
         <div class="secondary-container">
+            <div class="secondary-card2">
+    <h4 class="windy" style="color:rgb(215, 215, 215)">MIMAROPA LGUs Under Rainfall Conditions (Real-Time)</h4>
+    
+    {{-- Alarm sound --}}
+    <audio id="rainAlertSound" src="{{ asset('sounds/siren.mp3') }}" preload="auto"></audio>
+
+    <div id="rainMunicipalities"></div>
+</div>
+
+<div class="secondary-card2" 
+     style="height:200px; overflow-y:auto;">
+
+         <h4 class="windy" style="color:rgb(215, 215, 215)">MIMAROPA Heat Index Monitoring</h4>
+
+     <div id="heatIndexList" style="margin-top:10px;"></div>
+</div>
+
+
+
          <div class="secondary-card1" id="liveClockContainer" 
      style="display:flex; flex-direction:column; justify-content:center; align-items:center; 
             background:#2B2B2B;">
+
 
     <div id="liveTime" 
         style="font-size:55px; font-weight:bold; color:#FFA500; text-shadow:0 0 10px #ff8c00;">
@@ -304,19 +324,6 @@
         
 </div>
 
-<div class="secondary-card2" 
-     style="height:200px; overflow-y:auto;">
-
-         <h4 class="windy" style="color:rgb(215, 215, 215)">MIMAROPA Heat Index Monitoring</h4>
-
-     <div id="heatIndexList" style="margin-top:10px;"></div>
-</div>
-
-<div class="secondary-card2">
-    <h4 class="windy" style="color:rgb(215, 215, 215)">Rain-Affected Municipalities (Real-Time)</h4>
-
-    <div id="rainMunicipalities"></div>
-</div>
 
 
 
@@ -667,12 +674,17 @@ setInterval(loadPHDisasterNews, 600000);
 }, 300000); // 10,000 ms = 10 seconds
 </script>
 
+
+{{-- Real time rain  --}}
 <script>
 async function loadRainMunicipalities() {
     const container = document.getElementById("rainMunicipalities");
+    const alertSound = document.getElementById("rainAlertSound");
+
     container.innerHTML = "<p style='color:#999;'>Loading...</p>";
 
     let output = "";
+    let heavyRainDetected = false;  // 🔔 detect heavy rain
 
     for (const province in municipalities) {
         const muniList = municipalities[province];
@@ -685,6 +697,11 @@ async function loadRainMunicipalities() {
 
                 if (data.cod == 200) {
                     const cond = data.weather[0].description.toLowerCase();
+
+                    // 🔔 Detect heavy rain for siren
+                    if (cond.includes("heavy rain")) {
+                        heavyRainDetected = true;
+                    }
 
                     if (
                         cond.includes("light rain") ||
@@ -710,6 +727,12 @@ async function loadRainMunicipalities() {
         }
     }
 
+    // 🔊 Play siren ONLY if heavy rain exists
+    if (heavyRainDetected) {
+        alertSound.currentTime = 0; 
+        alertSound.play().catch(()=>{}); // prevents browser block errors
+    }
+
     if (output === "") {
         container.innerHTML = `<p style="color:#888;">No municipalities experiencing rain at the moment.</p>`;
     } else {
@@ -720,7 +743,6 @@ async function loadRainMunicipalities() {
 loadRainMunicipalities();
 setInterval(loadRainMunicipalities, 600000);
 </script>
-
 
 
 

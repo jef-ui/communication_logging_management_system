@@ -898,7 +898,5 @@ document.addEventListener("DOMContentLoaded", updateWelcomeDateTime);
 </script>
 
 
-
-
 </body>
 </html>
