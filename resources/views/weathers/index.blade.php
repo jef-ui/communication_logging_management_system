@@ -54,6 +54,7 @@
             background-color: red;
             width: 350px;
             height: 30px;
+
         }
 
         
@@ -61,6 +62,9 @@
             background-color: #2B2B2B;
             width: 340px;
             height: 370px;
+                        overflow-x: auto;
+            overflow-y: auto;
+            
         }
         
         .card2 {
@@ -122,6 +126,8 @@
             width: 30%;
             height: 200px;
             border: 1px solid #2B2B2B;
+            overflow-x: auto;
+            overflow-y: auto;
         }
 
         
@@ -229,14 +235,13 @@
             <div class="card1">
                   <h4 class="windy">MIMAROPA Real-Time Weather Condition</h4>
                  <div class="card1-container">
-    <!-- Weather Conditions Panel -->
-    <div class="card">
-        <div id="weatherBox">
-            <p style="color:#777;">Loading weather data...</p>
-        </div>
-    </div>
-</div>
-
+                        <!-- Weather Conditions Panel -->
+                        <div class="card">
+                            <div id="weatherBox">
+                                <p style="color:#777;">Loading weather data...</p>
+                            </div>
+                        </div>
+                    </div>
             </div>
                 <div class="card2">
                     <h4 class="windy">Windy Weather Map (Rain & Thunder)</h4>
@@ -300,24 +305,18 @@
 </div>
 
 <div class="secondary-card2" 
-     style="height:200px; overflow-y:auto; padding:10px;">
+     style="height:200px; overflow-y:auto;">
 
-     <h4 class="windy" style="color:rgb(215, 215, 215)">MIMAROPA Heat Index Monitoring</h4>
+         <h4 class="windy" style="color:rgb(215, 215, 215)">MIMAROPA Heat Index Monitoring</h4>
 
      <div id="heatIndexList" style="margin-top:10px;"></div>
 </div>
 
+<div class="secondary-card2">
+    <h4 class="windy" style="color:rgb(215, 215, 215)">Rain-Affected Municipalities (Real-Time)</h4>
 
-<div class="secondary-card2" >
-     
-        <h4 class="windy" style="color:rgb(215, 215, 215)">PHILIPPINE DISASTER NEWS (Live Headlines)</h4>
-    
-
-    <ul id="newsList" style="margin-top:10px; list-style:none; padding-left:0;">
-        <!-- News headlines will appear here -->
-    </ul>
+    <div id="rainMunicipalities"></div>
 </div>
-
 
 
 
@@ -358,108 +357,155 @@ const provinces = [
     { api: "Puerto Princesa", label: "Palawan Province" }
 ];
 
+const municipalities = {
+    "Marinduque Province": ["Boac","Gasan","Mogpog","Santa Cruz","Torrijos","Buenavista"],
+    "Oriental Mindoro Province": ["Calapan","Baco","Naujan","Victoria","Socorro","Pola","Puerto Galera","San Teodoro","Bansud","Gloria","Pinamalayan","Roxas","Bulalacao"],
+    "Occidental Mindoro Province": ["Mamburao","San Jose","Rizal","Calintaan","Sablayan","Santa Cruz","Abra de Ilog","Looc","Lubang"],
+    "Romblon Province": ["Romblon","Odiongan","Cajidiocan","Magdiwang","San Fernando","San Agustin","Santa Maria","Corcuera","Banton","Concepcion","Ferrol","Alcantara","Looc"],
+    "Palawan Province": ["Puerto Princesa","Aborlan","Narra","Quezon","Rizal","Brooke's Point","Bataraza","Sofronio Espanola","Roxas","San Vicente","Taytay","El Nido","Dumaran","Araceli","Kawayan","Linapacan","Cuyo","Agutaya","Magsaysay","Kalayaan","Balabac","Coron","Busuanga","Culion"]
+};
+
 function get3DIcon(condition) {
     const text = condition.toLowerCase();
 
-  if (text.includes("clear")) 
-    return "/images/weather/sun.png";
-
-// ☁ OVERCAST CLOUDS
-if (text.includes("overcast")) 
-    return "/images/weather/overcast.png";   // ← NEW (use a more solid cloud icon)
-
-// 🌤 FEW / SCATTERED CLOUDS
-if (text.includes("few clouds") || text.includes("scattered")) 
-    return "/images/weather/partly.png";
-
-// ⛅ BROKEN CLOUDS (very important for accuracy)
-if (text.includes("broken")) 
-    return "/images/weather/broken.png";     // ← NEW icon file
-
-// ☁ GENERAL CLOUDS (fallback)
-if (text.includes("cloud")) 
-    return "/images/weather/cloudy.png";
-
-// 🌧 LIGHT / MODERATE / HEAVY RAIN
-if (text.includes("light rain")) 
-    return "/images/weather/rain-light.png";
-
-if (text.includes("moderate rain")) 
-    return "/images/weather/rain.png";
-
-if (text.includes("heavy rain")) 
-    return "/images/weather/rain-heavy.png";
-
-if (text.includes("rain")) 
-    return "/images/weather/rain.png";
-
-// ⛈ THUNDERSTORM
-if (text.includes("thunder")) 
-    return "/images/weather/storm.png";
-
-// 🌫 HAZE / SMOKE / MIST / FOG
-if (text.includes("haze") || text.includes("smoke") ||
-    text.includes("mist") || text.includes("fog")) 
-    return "/images/weather/fog.png";
+    if (text.includes("thunder")) return "/images/weather/storm.png";
+    if (text.includes("heavy rain")) return "/images/weather/rain-heavy.png";
+    if (text.includes("moderate rain")) return "/images/weather/rain.png";
+    if (text.includes("light rain")) return "/images/weather/rain-light.png";
+    if (text.includes("rain")) return "/images/weather/rain.png";
+    if (text.includes("overcast")) return "/images/weather/overcast.png";
+    if (text.includes("broken")) return "/images/weather/broken.png";
+    if (text.includes("few") || text.includes("scattered")) return "/images/weather/partly.png";
+    if (text.includes("cloud")) return "/images/weather/cloudy.png";
+    if (text.includes("clear")) return "/images/weather/sun.png";
 
     return "/images/weather/unknown.png";
 }
 
+async function loadWeather(city) {
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city},PH&appid=${apiKey}&units=metric`;
+    const res = await fetch(url);
+    return await res.json();
+}
+
+// Assign numeric severity to conditions
+function getWeatherRank(condition) {
+    const text = condition.toLowerCase();
+
+    if (text.includes("thunder")) return 1;
+    if (text.includes("heavy rain")) return 2;
+    if (text.includes("moderate rain")) return 3;
+    if (text.includes("light rain")) return 4;
+    if (text.includes("overcast")) return 5;
+    if (text.includes("broken")) return 6;
+    if (text.includes("few") || text.includes("scattered")) return 7;
+    if (text.includes("cloud")) return 8;
+    if (text.includes("clear")) return 9;
+
+    return 10; // unknown
+}
+
 async function loadWeatherForProvinces() {
-    const weatherBox = document.getElementById("weatherBox");
-    weatherBox.innerHTML = "";
+    const box = document.getElementById("weatherBox");
+    box.innerHTML = "";
 
-    for (const item of provinces) {
-        try {
-            const url = `https://api.openweathermap.org/data/2.5/weather?q=${item.api},PH&appid=${apiKey}&units=metric`;
-            const response = await fetch(url);
-            const data = await response.json();
+    for (const p of provinces) {
+        const muniList = municipalities[p.label];
 
+        let combinedCondition = "";
+        let combinedIcon = "";
+        let totalRank = 999; // lowest rank = strongest weather
+
+        // check all municipalities for combined weather
+        for (const muni of muniList) {
+            const data = await loadWeather(muni);
             if (data.cod == 200) {
-                const temp = data.main.temp.toFixed(1);
-                const condition = data.weather[0].description;
-                const icon3d = get3DIcon(condition);
+                const cond = data.weather[0].description;
+                const rank = getWeatherRank(cond);
 
-                weatherBox.innerHTML += `
-                    <div style="
-                        padding:10px;
-                        border-bottom:1px solid #444;
-                        display:flex;
-                        align-items:center;
-                        color:#2B2B2B;
-                    ">
-                        <img src="${icon3d}" class="weather-icon-3d" style="width:40px;height:40px;">
-                        <div style="margin-left:10px;">
-                            <strong style="color:rgb(215, 215, 215);">${item.label}</strong><br>
-                            <span style="font-size:0.9rem; color:#ddd;">
-                                ${temp}°C - ${condition}
-                            </span>
-                        </div>
-                    </div>
-                `;
-            } else {
-                weatherBox.innerHTML += `
-                    <div style="padding:10px; border-bottom:1px solid #444; color:rgb(215, 215, 215);">
-                        <strong style="color:rgb(215, 215, 215);">${item.label}</strong><br>
-                        <span style="color:red;">Weather unavailable</span>
-                    </div>
-                `;
+                if (rank < totalRank) {
+                    totalRank = rank;
+                    combinedCondition = cond;
+                    combinedIcon = get3DIcon(cond);
+                }
             }
+        }
 
-        } catch (error) {
-            weatherBox.innerHTML += `
-                <div style="padding:10px; border-bottom:1px solid #444; color:rgb(215, 215, 215);">
-                    <strong style="color:rgb(215, 215, 215);">${item.label}</strong><br>
-                    <span style="color:red;">Error loading weather</span>
+        // fallback values
+        if (!combinedCondition) {
+            combinedCondition = "Unavailable";
+            combinedIcon = "/images/weather/unknown.png";
+        }
+
+        const provinceHTML = `
+            <div class="province-item" 
+                style="padding:10px;border-bottom:1px solid #555;display:flex;align-items:center;cursor:pointer;"
+                onclick="toggleMunicipalities('${p.label}')">
+
+                <img src="${combinedIcon}" style="width:40px;height:40px;">
+                <div style="margin-left:10px;">
+                    <strong style="color:white;">${p.label}</strong><br>
+                    <span style="color:#ccc;font-size:0.9rem;">
+                        ${combinedCondition}
+                    </span>
+                </div>
+            </div>
+
+            <div id="${p.label}-muni" style="display:none; margin-left:20px;"></div>
+        `;
+
+        box.innerHTML += provinceHTML;
+    }
+}
+
+async function toggleMunicipalities(provinceName) {
+    const container = document.getElementById(`${provinceName}-muni`);
+    if (container.style.display === "block") {
+        container.style.display = "none";
+        return;
+    }
+
+    container.style.display = "block";
+    container.innerHTML = "<p style='color:#888;'>Loading...</p>";
+
+    const muniList = municipalities[provinceName];
+    let html = "";
+
+    for (const muni of muniList) {
+        const data = await loadWeather(muni);
+
+        if (data.cod == 200) {
+            const temp = data.main.temp.toFixed(1);
+            const cond = data.weather[0].description;
+            const icon = get3DIcon(cond);
+
+            html += `
+                <div style="padding:8px 0; border-bottom:1px solid #333; display:flex; align-items:center;">
+                    <img src="${icon}" style="width:28px;height:28px;">
+                    <div style="margin-left:8px;">
+                        <strong style="color:#FFA500;">${muni}</strong><br>
+                        <span style="color:#bbb;font-size:0.85rem;">
+                            ${temp}°C - ${cond}
+                        </span>
+                    </div>
+                </div>
+            `;
+        } else {
+            html += `
+                <div style="padding:8px; color:#FFA500;">
+                    ${muni} — Weather Unavailable
                 </div>
             `;
         }
     }
+
+    container.innerHTML = html;
 }
 
 loadWeatherForProvinces();
 setInterval(loadWeatherForProvinces, 600000);
 </script>
+
 
 <script>
 function updateClock() {
@@ -619,6 +665,60 @@ setInterval(loadPHDisasterNews, 600000);
     setInterval(() => {
     location.reload(true); // full page reload (same as CTRL+R)
 }, 300000); // 10,000 ms = 10 seconds
+</script>
+
+<script>
+async function loadRainMunicipalities() {
+    const container = document.getElementById("rainMunicipalities");
+    container.innerHTML = "<p style='color:#999;'>Loading...</p>";
+
+    let output = "";
+
+    for (const province in municipalities) {
+        const muniList = municipalities[province];
+
+        for (const muni of muniList) {
+            try {
+                const url = `https://api.openweathermap.org/data/2.5/weather?q=${muni},PH&appid=${apiKey}&units=metric`;
+                const res = await fetch(url);
+                const data = await res.json();
+
+                if (data.cod == 200) {
+                    const cond = data.weather[0].description.toLowerCase();
+
+                    if (
+                        cond.includes("light rain") ||
+                        cond.includes("moderate rain") ||
+                        cond.includes("heavy rain") ||
+                        cond.includes("rain")
+                    ) {
+                        const temp = data.main.temp.toFixed(1);
+
+                        output += `
+                            <div style="padding:6px 0; border-bottom:1px solid #333;">
+                                <strong style="color:#FFA500;">${muni}</strong>
+                                <span style="color:#6fa8dc;"> (${province.replace(" Province","")})</span>
+                                <br>
+                                <span style="color:#ccc; font-size:0.85rem;">
+                                    ${temp}°C — ${cond}
+                                </span>
+                            </div>
+                        `;
+                    }
+                }
+            } catch (err) {}
+        }
+    }
+
+    if (output === "") {
+        container.innerHTML = `<p style="color:#888;">No municipalities experiencing rain at the moment.</p>`;
+    } else {
+        container.innerHTML = output;
+    }
+}
+
+loadRainMunicipalities();
+setInterval(loadRainMunicipalities, 600000);
 </script>
 
 
