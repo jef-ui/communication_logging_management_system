@@ -281,7 +281,7 @@
         
         <div class="secondary-container">
             <div class="secondary-card2">
-    <h4 class="windy" style="color:rgb(215, 215, 215)">MIMAROPA LGUs Under Rainfall Conditions (Real-Time)</h4>
+    <h4 class="windy" style="color:rgb(215, 215, 215)">Real-Time Rainfall Situation</h4>
     
     {{-- Alarm sound --}}
     <audio id="rainAlertSound" src="{{ asset('sounds/siren.mp3') }}" preload="auto"></audio>
@@ -341,6 +341,8 @@
     </div>
 
     </div> 
+
+{{-- windy-map --}}
 <script>
 function resizeWindyMap() {
     const card = document.getElementById("windyMapContainer");
@@ -353,6 +355,7 @@ window.addEventListener("load", resizeWindyMap);
 window.addEventListener("resize", resizeWindyMap);
 </script>
 
+{{-- Real Time Weather Condition --}}
 <script>
 const apiKey = "2348d8b4d12fe196f2a2a15310f0a7da";  
 
@@ -513,7 +516,7 @@ loadWeatherForProvinces();
 setInterval(loadWeatherForProvinces, 600000);
 </script>
 
-
+{{-- Real Time Clock and Date --}}
 <script>
 function updateClock() {
     const timeElem = document.getElementById("liveTime");
@@ -549,7 +552,7 @@ updateClock();
 setInterval(updateClock, 1000);
 </script>
 
-
+{{-- Real-Time Heat Index --}}
 <script>
 async function loadHeatIndex() {
     const apiKey = "2348d8b4d12fe196f2a2a15310f0a7da";
@@ -563,8 +566,36 @@ async function loadHeatIndex() {
     ];
 
     const container = document.getElementById("heatIndexList");
-    container.innerHTML = ""; // clear content
+    container.innerHTML = ""; // clear old content
 
+    // -----------------------------
+    // CORRECT HEAT INDEX FUNCTION
+    // -----------------------------
+    function computeHeatIndex(T, RH) {
+        // Convert Celsius → Fahrenheit
+        let Tf = (T * 9/5) + 32;
+
+        // Official NWS Rothfusz Regression (°F)
+        let HI_F =
+            -42.379 +
+            2.04901523 * Tf +
+            10.14333127 * RH -
+            0.22475541 * Tf * RH -
+            0.00683783 * Tf * Tf -
+            0.05481717 * RH * RH +
+            0.00122874 * Tf * Tf * RH +
+            0.00085282 * Tf * RH * RH -
+            0.00000199 * Tf * Tf * RH * RH;
+
+        // Convert back °F → °C
+        let HI_C = (HI_F - 32) * 5/9;
+
+        return HI_C;
+    }
+
+    // -----------------------------
+    // LOOP FOR EACH PROVINCE
+    // -----------------------------
     for (const p of provinces) {
         try {
             const url = `https://api.openweathermap.org/data/2.5/weather?q=${p.api},PH&appid=${apiKey}&units=metric`;
@@ -574,17 +605,9 @@ async function loadHeatIndex() {
             const T = data.main.temp;
             const RH = data.main.humidity;
 
-            // Heat Index Formula
-            const HI =
-                -8.784 +
-                1.611 * T +
-                2.338 * RH -
-                0.146 * T * RH -
-                0.0123 * (T*T) -
-                0.0164 * (RH*RH) +
-                0.00221 * (T*T) * RH +
-                0.000725 * T * (RH*RH);
+            const HI = computeHeatIndex(T, RH);
 
+            // UI card output
             const item = document.createElement("div");
             item.style.color = "white";
             item.style.fontSize = "14px";
@@ -610,14 +633,13 @@ async function loadHeatIndex() {
     }
 }
 
+// INITIAL LOAD + AUTO REFRESH EVERY 10 MINS
 loadHeatIndex();
 setInterval(loadHeatIndex, 600000);
 </script>
 
 
-
-
-
+{{-- News API --}}
 <script>
 const newsKey = "4ad9132c35c6447a899b871d7e5b0ebb"; // ← replace with your NewsAPI.org key
 
@@ -668,10 +690,12 @@ loadPHDisasterNews();
 setInterval(loadPHDisasterNews, 600000);
 </script>
 
+
+{{-- 5 mins refresh rate --}}
 <script>
     setInterval(() => {
     location.reload(true); // full page reload (same as CTRL+R)
-}, 300000); // 10,000 ms = 10 seconds
+}, 300000); // 10,000 ms = 10 seconds -> 300,000 5 mins
 </script>
 
 
@@ -684,7 +708,8 @@ async function loadRainMunicipalities() {
     container.innerHTML = "<p style='color:#999;'>Loading...</p>";
 
     let output = "";
-    let heavyRainDetected = false;  // 🔔 detect heavy rain
+    let heavyRainDetected = false;
+    let thunderDetected = false; // ⚡ detect thunderstorm
 
     for (const province in municipalities) {
         const muniList = municipalities[province];
@@ -697,20 +722,27 @@ async function loadRainMunicipalities() {
 
                 if (data.cod == 200) {
                     const cond = data.weather[0].description.toLowerCase();
+                    const temp = data.main.temp.toFixed(1);
 
-                    // 🔔 Detect heavy rain for siren
+                    // ⚡ Detect thunderstorm
+                    if (cond.includes("thunder") || cond.includes("storm")) {
+                        thunderDetected = true;
+                    }
+
+                    // 🔔 Detect heavy rain
                     if (cond.includes("heavy rain")) {
                         heavyRainDetected = true;
                     }
 
+                    // 🟦 Filter for rain OR thunderstorm
                     if (
                         cond.includes("light rain") ||
                         cond.includes("moderate rain") ||
                         cond.includes("heavy rain") ||
-                        cond.includes("rain")
+                        cond.includes("rain") ||
+                        cond.includes("thunder") ||
+                        cond.includes("storm")
                     ) {
-                        const temp = data.main.temp.toFixed(1);
-
                         output += `
                             <div style="padding:6px 0; border-bottom:1px solid #333;">
                                 <strong style="color:#FFA500;">${muni}</strong>
@@ -727,14 +759,15 @@ async function loadRainMunicipalities() {
         }
     }
 
-    // 🔊 Play siren ONLY if heavy rain exists
-    if (heavyRainDetected) {
-        alertSound.currentTime = 0; 
-        alertSound.play().catch(()=>{}); // prevents browser block errors
+    // 🔊 Play siren when HEAVY RAIN or THUNDER detected
+    if (heavyRainDetected || thunderDetected) {
+        alertSound.currentTime = 0;
+        alertSound.play().catch(()=>{});
     }
 
+    // 🟦 Display result
     if (output === "") {
-        container.innerHTML = `<p style="color:#888;">No municipalities experiencing rain at the moment.</p>`;
+        container.innerHTML = `<p style="color:#888;">No municipalities experiencing rain or thunderstorm at the moment.</p>`;
     } else {
         container.innerHTML = output;
     }
@@ -743,7 +776,6 @@ async function loadRainMunicipalities() {
 loadRainMunicipalities();
 setInterval(loadRainMunicipalities, 600000);
 </script>
-
 
 
 
