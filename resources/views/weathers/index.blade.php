@@ -197,29 +197,27 @@
 
         /* scroll */
         /* Black Scrollbar */
-.secondary-card2::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
+        .secondary-card2::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
 
-.secondary-card2::-webkit-scrollbar-track {
-    background: #1a1a1a;   /* dark track */
-    border-radius: 4px;
-}
+        .secondary-card2::-webkit-scrollbar-track {
+            background: #1a1a1a;   /* dark track */
+            border-radius: 4px;
+        }
 
-.secondary-card2::-webkit-scrollbar-thumb {
-    background: #000;      /* pure black thumb */
-    border-radius: 4px;
-}
+        .secondary-card2::-webkit-scrollbar-thumb {
+            background: #000;      /* pure black thumb */
+            border-radius: 4px;
+        }
 
-.secondary-card2::-webkit-scrollbar-thumb:hover {
-    background: #333;      /* slightly lighter on hover */
-}
+        .secondary-card2::-webkit-scrollbar-thumb:hover {
+            background: #333;      /* slightly lighter on hover */
+        }
 
+</style>
 
-
-
-    </style>
 </head>
 <body>
     {{-- Dashboard main parent --}}
@@ -228,119 +226,94 @@
             <img src="{{asset ('images/ocdrdrrmc.png')}}" alt="ocd-rdrrmc-logo" class="logo">
             <h4 class="title">OCD MIMAROPA Weather Monitoring Dashboard</h4>
             <img src="{{asset ('images/bago.png')}}" alt="ocd-rdrrmc-logo" class="logo2">
-            
         </div>
 
         <div class="main-container">
             <div class="card1">
-                  <h4 class="windy">MIMAROPA Real-Time Weather Situation</h4>
+                
+                <h4 class="windy">MIMAROPA Real-Time Weather Situation</h4>
+
                  <div class="card1-container">
                         <!-- Weather Conditions Panel -->
                         <div class="card">
                             <div id="weatherBox">
-                                <p style="color:#777;">Loading weather data...</p>
-                            </div>
+                            <p style="color:#777;">Loading weather data...</p>
                         </div>
                     </div>
+                </div>
+
             </div>
-                <div class="card2">
-                    <h4 class="windy">Windy Weather Map (Rain & Thunder)</h4>
+
+            <div class="card2">
+                <h4 class="windy">Windy Weather Map (Rain & Thunder)</h4>
                     {{-- windy --}}
-                    <div class="windy-map" id="windyMapContainer">
-      <iframe
-    id="windyMapFrame"
-    src="https://embed.windy.com/embed2.html?lat=13.0&lon=122.0&zoom=5&level=surface&overlay=rain&product=ecmwf&menu=&message=true&marker=&calendar=&pressure=&type=map&location=coordinates&detail=&metricWind=knots&metricTemp=c"
-    frameborder="0"
-    width="100%"
-    height="100%">
-</iframe>
+                <div class="windy-map" id="windyMapContainer">
+                    <iframe
+                        id="windyMapFrame"
+                        src="https://embed.windy.com/embed2.html?lat=13.0&lon=122.0&zoom=5&level=surface&overlay=rain&product=ecmwf&menu=&message=true&marker=&calendar=&pressure=&type=map&location=coordinates&detail=&metricWind=knots&metricTemp=c"
+                        frameborder="0"
+                        width="100%"
+                        height="100%">
+                    </iframe>
+                </div>
+            </div>  
 
-                    </div>
-                </div>  
-                {{-- windyend --}}
 
-              <div class="card2">
+            <div class="card2">
                     <h4 class="windy">Windy Weather Map (Wind)</h4>
                     {{-- windy --}}
-             <div class="windy-map" id="windyMapContainer">
-<iframe
-    id="windyMapFrame"
- src="https://embed.windy.com/embed2.html?lat=13.0&lon=121.0&zoom=4&level=surface&overlay=wind&product=ecmwf&tcinfo=1&menu=&message=true&marker=&calendar=&pressure=&type=map&location=coordinates&detail=&metricWind=knots&metricTemp=c"
-    frameborder="0"
-    width="100%"
-    height="100%">
-</iframe>
-
-
-
-</div>
-
-                </div>  
+                <div class="windy-map" id="windyMapContainer">
+                    <iframe
+                        id="windyMapFrame"
+                        src="https://embed.windy.com/embed2.html?lat=13.0&lon=121.0&zoom=4&level=surface&overlay=wind&product=ecmwf&tcinfo=1&menu=&message=true&marker=&calendar=&pressure=&type=map&location=coordinates&detail=&metricWind=knots&metricTemp=c"
+                        frameborder="0"
+                        width="100%"
+                        height="100%">
+                    </iframe>
+                </div>
+            </div>  
         </div>
 
         
         <div class="secondary-container">
             <div class="secondary-card2">
-    <h4 class="windy" style="color:rgb(215, 215, 215)">Real-Time Rainfall Situation</h4>
-    
-    {{-- Alarm sound --}}
-    <audio id="rainAlertSound" src="{{ asset('sounds/siren.mp3') }}" preload="auto"></audio>
+                <h4 class="windy" style="color:rgb(215, 215, 215)">Real-Time Rainfall Situation</h4>
+                {{-- Alarm sound --}}
+                <audio id="rainAlertSound" src="{{ asset('sounds/siren.mp3') }}" preload="auto"></audio>
+                <div id="rainMunicipalities"></div>
+            </div>
 
-    <div id="rainMunicipalities"></div>
-</div>
+            <div class="secondary-card2" style="height:200px; overflow-y:auto;">
+                <h4 class="windy" style="color:rgb(215, 215, 215)">MIMAROPA Heat Index Monitoring</h4>
+                <div id="heatIndexList" style="margin-top:10px;"></div>
+            </div>
 
-<div class="secondary-card2" 
-     style="height:200px; overflow-y:auto;">
+            <div class="secondary-card1" id="liveClockContainer" style="display:flex; flex-direction:column; justify-content:center;align-items:center; background:#2B2B2B;">
+                <div id="liveTime" 
+                    style="font-size:55px; font-weight:bold; color:#FFA500; text-shadow:0 0 10px #ff8c00;">
+                    --
+                </div>
 
-         <h4 class="windy" style="color:rgb(215, 215, 215)">MIMAROPA Heat Index Monitoring</h4>
+                <div id="liveDate" 
+                    style="font-size:18px; margin-top:5px; color:#FFA500; text-shadow:0 0 8px #ff8c00;">
+                    --
+                </div>
+            </div>
 
-     <div id="heatIndexList" style="margin-top:10px;"></div>
-</div>
-
-
-
-         <div class="secondary-card1" id="liveClockContainer" 
-     style="display:flex; flex-direction:column; justify-content:center; align-items:center; 
-            background:#2B2B2B;">
-
-
-    <div id="liveTime" 
-        style="font-size:55px; font-weight:bold; color:#FFA500; text-shadow:0 0 10px #ff8c00;">
-        --
-    </div>
-
-    <div id="liveDate" 
-        style="font-size:18px; margin-top:5px; color:#FFA500; text-shadow:0 0 8px #ff8c00;">
-        --
-    </div>
-
-</div>
-  
-<div class="secondary-card-alert" >
-     
-        <h4 class="windy" style="color: rgb(215, 215, 215">RDRRMC MIMAROPA Alert Status</h4>
-        <h1 class="alert-level">BLUE</h1>
-        <span style="color: white;font-weight: bold;font-size: 30px;">ALERT</span>
-        
-</div>
-
-
-
-
-
-
+            <div class="secondary-card-alert" >
+                <h4 class="windy" style="color: rgb(215, 215, 215">RDRRMC MIMAROPA Alert Status</h4>
+                <h1 class="alert-level">BLUE</h1>
+                <span style="color: white;font-weight: bold;font-size: 30px;">ALERT</span> 
+            </div>
         </div>    
 
-        
-    <div class="footer">
-        <p>Designed and Developed by ICTU MIMAROPA, Office of Civil Defense MIMAROPA © 2025</p>
-    </div>
-
-
+        <div class="footer">
+            <p>Designed and Developed by ICTU MIMAROPA, Office of Civil Defense MIMAROPA © 2025</p>
+        </div>
+    </div> {{-- end of dashboard --}}
     
-    </div>
 
-    </div> 
+</div> 
 
 {{-- windy-map --}}
 <script>
@@ -639,7 +612,7 @@ setInterval(loadHeatIndex, 600000);
 </script>
 
 
-{{-- News API --}}
+{{-- News API ##########################################################################--}} 
 <script>
 const newsKey = "4ad9132c35c6447a899b871d7e5b0ebb"; // ← replace with your NewsAPI.org key
 
@@ -699,7 +672,7 @@ setInterval(loadPHDisasterNews, 600000);
 </script>
 
 
-{{-- Real time rain  --}}
+{{-- Real time rain ########################################################################## --}}
 <script>
 async function loadRainMunicipalities() {
     const container = document.getElementById("rainMunicipalities");
