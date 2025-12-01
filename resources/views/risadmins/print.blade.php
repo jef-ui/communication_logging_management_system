@@ -465,7 +465,7 @@
   <tr>
     <td class="tg-l6li"><b>Printed Name:</b></td>
   <td class="tg-91w8" colspan="2"><b>{{$risadmin->name}}</b></td>
-  <td class="tg-91w8" colspan="2"><b>MARC REMBRANDT P. VICTORE</b></td>
+  <td class="tg-91w8" colspan="2"><b>AQUILINO P. DUCAY</b></td>
   <td class="tg-91w8" colspan="2"><b>JERVIS LLOYD M. ATILANO</b></td>
   <td class="tg-91w8" colspan="2"><b>{{$risadmin->name}}</b></td>
   </tr>
