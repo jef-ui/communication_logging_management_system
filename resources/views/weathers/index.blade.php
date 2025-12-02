@@ -391,32 +391,40 @@ setTimeout(resizeVentusky, 800);
 </div>
 
 <script>
-// Check if DZMM becomes live every 5 seconds
 function checkDZMM() {
     const frame = document.getElementById("dzmmFrame");
     const standby = document.getElementById("dzmmStandby");
 
-    // Try to detect if iframe is loading actual video
-    let loaded = false;
+    // DO NOT USE contentWindow - blocked by YouTube
+    // Instead, check if the iframe loads a real <video> element
+    let isLive = false;
+
     try {
-        loaded = frame.contentWindow.length > 0;
+        const url = frame.src;
+        // if YouTube returns error, URL changes to unavailable string
+        if (!url.includes("unavailable")) {
+            isLive = true;
+        }
     } catch (e) {
-        loaded = true; // If blocked, assume playable
+        isLive = false;
     }
 
-    if (loaded) {
+    if (isLive) {
         standby.style.display = "none";
         frame.style.display = "block";
+    } else {
+        // Keep animation alive
+        standby.style.display = "flex";
+        frame.style.display = "none";
     }
 }
 
-// Watch for LIVE
-setInterval(checkDZMM, 5000);
+// Run checker every 8 seconds
+setInterval(checkDZMM, 8000);
 
-// Initial check after 2 seconds
+// Initial check
 setTimeout(checkDZMM, 2000);
 </script>
-
 
 
          <div class="secondary-card-alert" >
@@ -791,7 +799,7 @@ setInterval(loadPHDisasterNews, 600000);
 <script>
     setInterval(() => {
     location.reload(true); // full page reload (same as CTRL+R)
-}, 300000); // 10,000 ms = 10 seconds -> 300,000 5 mins
+}, 600000); // 10,000 ms = 10 seconds -> 300,000 5 mins
 </script>
 
 
