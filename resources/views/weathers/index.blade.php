@@ -395,36 +395,53 @@ function checkDZMM() {
     const frame = document.getElementById("dzmmFrame");
     const standby = document.getElementById("dzmmStandby");
 
-    // DO NOT USE contentWindow - blocked by YouTube
-    // Instead, check if the iframe loads a real <video> element
-    let isLive = false;
+    // Guarantee standby if iframe failed / unavailable
+    const frameURL = frame.src.toLowerCase();
 
-    try {
-        const url = frame.src;
-        // if YouTube returns error, URL changes to unavailable string
-        if (!url.includes("unavailable")) {
-            isLive = true;
-        }
-    } catch (e) {
-        isLive = false;
+    // Detect YouTube unavailable content
+    if (
+        frameURL.includes("unavailable") ||
+        frameURL.includes("error") ||
+        frameURL.includes("invalid") ||
+        frameURL.trim() === ""
+    ) {
+        frame.style.display = "none";
+        standby.style.display = "flex";
+        return;
     }
 
-    if (isLive) {
+    // Try safer detection – whether YouTube actually loads video
+    let trulyLive = false;
+
+    try {
+        // If contentWindow is blocked but URL is correct, assume NOT LIVE
+        const w = frame.contentWindow;
+        if (w && w.length > 0) {
+            trulyLive = true;
+        }
+    } catch (err) {
+        // iframe still not ready → treat as NOT LIVE
+        trulyLive = false;
+    }
+
+    // FINAL DECISION
+    if (trulyLive) {
         standby.style.display = "none";
         frame.style.display = "block";
     } else {
-        // Keep animation alive
         standby.style.display = "flex";
         frame.style.display = "none";
     }
 }
 
-// Run checker every 8 seconds
-setInterval(checkDZMM, 8000);
+// Re-check every 6 seconds
+setInterval(checkDZMM, 6000);
 
-// Initial check
+// First check 2 seconds after load
 setTimeout(checkDZMM, 2000);
 </script>
+
+
 
 
          <div class="secondary-card-alert" >
@@ -799,7 +816,7 @@ setInterval(loadPHDisasterNews, 600000);
 <script>
     setInterval(() => {
     location.reload(true); // full page reload (same as CTRL+R)
-}, 600000); // 10,000 ms = 10 seconds -> 300,000 5 mins
+}, 300000); // 10,000 ms = 10 seconds -> 300,000 5 mins
 </script>
 
 
