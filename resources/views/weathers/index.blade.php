@@ -106,7 +106,7 @@
             display: flex;
             flex-direction: row;
             width: 100%;
-            gap: 10px;
+            gap: 5px;
             height: 200px;
             justify-content: space-between;
         }
@@ -117,9 +117,13 @@
         }
 
         .secondary-card1 {
-            background-color: rgb(55, 15, 67);
             width: 25%;
             height: 200px;
+            border: 1px solid #2B2B2B;
+        }
+
+        .secondary-card1 h4 {
+            height: 35px;
         }
 
         .secondary-card2 {
@@ -149,7 +153,7 @@
         .main-header {
             display: flex;
             flex-direction: row;
-            justify-content: space-between;
+            justify-content: space-around;
             align-items: center;
             padding-left: 20px;
             padding-right: 20px;
@@ -216,6 +220,31 @@
             background: #333;      /* slightly lighter on hover */
         }
 
+        #live-date-time {
+            display: flex;
+            flex-direction: column;
+            font: 10px;
+            border-left: 1px solid white;
+            padding-left: 10px;
+            border-right: 1px solid white;
+            padding-right: 10px;
+        }
+
+        /* 3D Smooth Flip Animation */
+@keyframes flipLogo {
+    0%   { transform: rotateY(0deg); }
+    50%  { transform: rotateY(180deg); }
+    100% { transform: rotateY(360deg); }
+}
+
+/* Required so animation does NOT freeze */
+#dzmmLogo {
+    animation: flipLogo 2.5s infinite linear;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+}
+
+
 </style>
 
 </head>
@@ -225,7 +254,15 @@
         <div class="main-header">
             <img src="{{asset ('images/ocdrdrrmc.png')}}" alt="ocd-rdrrmc-logo" class="logo">
             <h4 class="title">OCD MIMAROPA Weather Monitoring Dashboard</h4>
+
             <img src="{{asset ('images/bago.png')}}" alt="ocd-rdrrmc-logo" class="logo2">
+
+            <div id="live-date-time">
+            <div id="liveDate" style="font-size:20px; color:#FFA500; text-shadow:0 0 8px #ff8c00;">--</div>
+            <div id="liveTime" style="font-size:20px; font-weight:bold; color:#FFA500; text-shadow:0 0 10px #ff8c00;">--</div>
+            </div>
+
+            
         </div>
 
         <div class="main-container">
@@ -244,9 +281,9 @@
 
             </div>
 
-            <div class="card2">
+            {{-- <div class="card2"> 
                 <h4 class="windy">Windy Weather Map (Rain & Thunder)</h4>
-                    {{-- windy --}}
+                    {{-- windy -- }}
                 <div class="windy-map" id="windyMapContainer">
                     <iframe
                         id="windyMapFrame"
@@ -256,7 +293,36 @@
                         height="100%">
                     </iframe>
                 </div>
-            </div>  
+            </div>  --}}
+
+<div class="card2">
+    <h4 class="windy">Ventusky Weather Map (Satellite-Like Clouds)</h4>
+
+    <div class="windy-map" id="ventuskyContainer" style="position: relative; width:100%; height:370px;">
+        <iframe
+            id="ventuskyFrame"
+            src="https://embed.ventusky.com/?p=10.7;122.9;3&l=radar" 
+            frameborder="0"
+            style="width:100%; height:100%; border:0;">
+        </iframe>
+    </div>
+</div>
+
+<script>
+function resizeVentusky() {
+    const card = document.getElementById("ventuskyContainer");
+    const frame = document.getElementById("ventuskyFrame");
+
+    frame.style.width = card.clientWidth + "px";
+    frame.style.height = card.clientHeight + "px";
+}
+
+window.addEventListener("load", resizeVentusky);
+window.addEventListener("resize", resizeVentusky);
+
+setTimeout(resizeVentusky, 800);
+</script>
+
 
 
             <div class="card2">
@@ -288,24 +354,81 @@
                 <div id="heatIndexList" style="margin-top:10px;"></div>
             </div>
 
-            <div class="secondary-card1" id="liveClockContainer" style="display:flex; flex-direction:column; justify-content:center;align-items:center; background:#2B2B2B;">
-                <div id="liveTime" 
-                    style="font-size:55px; font-weight:bold; color:#FFA500; text-shadow:0 0 10px #ff8c00;">
-                    --
-                </div>
+<div class="secondary-card1" 
+     style="display:flex; flex-direction:column; align-items:center;">
 
-                <div id="liveDate" 
-                    style="font-size:18px; margin-top:5px; color:#FFA500; text-shadow:0 0 8px #ff8c00;">
-                    --
-                </div>
-            </div>
+    <h4 class="windy" style="color: whitesmoke">DZMM TeleRadyo News (Live)</h4>
 
-            <div class="secondary-card-alert" >
+    <div id="dzmmWrapper" 
+         style="width:100%; height:200px; border-radius:5px; overflow:hidden; position:relative;">
+
+        <!-- YOUTUBE LIVE STREAM -->
+        <iframe 
+            id="dzmmFrame"
+            width="100%" 
+            height="100%"
+            src="https://www.youtube.com/embed/live_stream?channel=UCXIgfGZhI3ZtF8BrCoHcGYA&autoplay=1"
+            frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            style="position:absolute; top:0; left:0; display:none;">
+        </iframe>
+
+        <!-- STANDBY SCREEN -->
+        <div id="dzmmStandby"
+             style="width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+            
+            <!-- FLIPPING LOGO -->
+            <img id="dzmmLogo" src="{{ asset('images/Radyo_Patrol_logo.svg') }}" 
+                 style="width:250px; height:auto;">
+
+            <!-- NOTE TEXT -->
+            <p style="color:#dedede; margin-top:5px; font-size:10px; text-align:center;">
+                The live video will start once the broadcast begins.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Check if DZMM becomes live every 5 seconds
+function checkDZMM() {
+    const frame = document.getElementById("dzmmFrame");
+    const standby = document.getElementById("dzmmStandby");
+
+    // Try to detect if iframe is loading actual video
+    let loaded = false;
+    try {
+        loaded = frame.contentWindow.length > 0;
+    } catch (e) {
+        loaded = true; // If blocked, assume playable
+    }
+
+    if (loaded) {
+        standby.style.display = "none";
+        frame.style.display = "block";
+    }
+}
+
+// Watch for LIVE
+setInterval(checkDZMM, 5000);
+
+// Initial check after 2 seconds
+setTimeout(checkDZMM, 2000);
+</script>
+
+
+
+         <div class="secondary-card-alert" >
                 <h4 class="windy" style="color: rgb(215, 215, 215">RDRRMC MIMAROPA Alert Status</h4>
                 <h1 class="alert-level">BLUE</h1>
                 <span style="color: white;font-weight: bold;font-size: 30px;">ALERT</span> 
             </div>
-        </div>    
+        </div>  
+
+            </div>
+
+     
 
         <div class="footer">
             <p>Designed and Developed by ICTU MIMAROPA, Office of Civil Defense MIMAROPA © 2025</p>
