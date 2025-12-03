@@ -14,6 +14,11 @@
             margin: 0px;
             padding: 0px;
             box-sizing: border-box;
+
+        }
+
+        body {
+                       background-color: #0d0d0d;
         }
 
         .dashboard {
@@ -23,7 +28,7 @@
             text-align: center;
             flex-direction: column;
             width: 100%;
-            height: 100vh;
+            height: auto;
             overflow-x: hidden;
             overflow-y: hidden;
             gap: 10px;
@@ -107,7 +112,7 @@
             flex-direction: row;
             width: 100%;
             gap: 5px;
-            height: 200px;
+            height: 400px;
             justify-content: space-between;
         }
 
@@ -118,7 +123,7 @@
 
         .secondary-card1 {
             width: 25%;
-            height: 200px;
+            height: 400px;
             border: 1px solid #2B2B2B;
         }
 
@@ -128,7 +133,7 @@
 
         .secondary-card2 {
             width: 30%;
-            height: 200px;
+            height: 400px;
             border: 1px solid #2B2B2B;
             overflow-x: auto;
             overflow-y: auto;
@@ -137,7 +142,7 @@
         
         .secondary-card-alert {
             width: 25%;
-            height: 200px;
+            height: 400px;
             border: 1px solid #2B2B2B;
             background-color: blue;
             display: flex;
@@ -349,7 +354,7 @@ setTimeout(resizeVentusky, 800);
                 <div id="rainMunicipalities"></div>
             </div>
 
-            <div class="secondary-card2" style="height:200px; overflow-y:auto;">
+            <div class="secondary-card2" style="height:400px; overflow-y:auto;">
                 <h4 class="windy" style="color:rgb(215, 215, 215)">MIMAROPA Heat Index Monitoring</h4>
                 <div id="heatIndexList" style="margin-top:10px;"></div>
             </div>
@@ -360,7 +365,7 @@ setTimeout(resizeVentusky, 800);
     <h4 class="windy" style="color: whitesmoke">DZMM TeleRadyo News (Live)</h4>
 
     <div id="dzmmWrapper" 
-         style="width:100%; height:200px; border-radius:5px; overflow:hidden; position:relative;">
+         style="width:100%; height:500px; border-radius:5px; overflow:hidden; position:relative;">
 
         <!-- YOUTUBE LIVE STREAM -->
         <iframe 
@@ -446,18 +451,22 @@ setTimeout(checkDZMM, 2000);
 
          <div class="secondary-card-alert" >
                 <h4 class="windy" style="color: rgb(215, 215, 215">RDRRMC MIMAROPA Alert Status</h4>
-                <h1 class="alert-level">BLUE</h1>
-                <span style="color: white;font-weight: bold;font-size: 30px;">ALERT</span> 
+                <h1 class="alert-level" style="margin: auto ;">BLUE</h1>
             </div>
         </div>  
 
+        
+                         <div class="footer">
+            <p>Designed and Developed by ICTU MIMAROPA, Office of Civil Defense MIMAROPA © 2025</p>
+        </div>
+
             </div>
+
+
 
      
 
-        <div class="footer">
-            <p>Designed and Developed by ICTU MIMAROPA, Office of Civil Defense MIMAROPA © 2025</p>
-        </div>
+   
     </div> {{-- end of dashboard --}}
     
 
