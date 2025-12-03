@@ -184,16 +184,25 @@
             color: rgb(215, 215, 215);
         }
 
-        .footer p {
-            font-size: 12px;
-            color: rgb(215, 215, 215);
-        }
 
         .footer {
             display: flex;
+            justify-content: center;
             align-items: center;
-            justify-content: center;    
+            gap: 10px;
+            color: whitesmoke;
+            height: 25px; 
+            font-family: 'Inter', sans-serif;
+            font-weight: 200;
+            font-size: 13px;
         }
+
+        .footer-logo {
+            width: 20px;
+            height: auto;
+        }
+
+
 
         .card {
             margin-top: 20px; 
@@ -456,8 +465,9 @@ setTimeout(checkDZMM, 2000);
         </div>  
 
         
-                         <div class="footer">
-            <p>Designed and Developed by ICTU MIMAROPA, Office of Civil Defense MIMAROPA © 2025</p>
+        <div class="footer">
+            <img src="{{asset ('images/logo.png')}}" alt="logo" class="footer-logo">
+            <p class="p-footer">Designed and Developed by ICTU MIMAROPA, Office of Civil Defense MIMAROPA © 2025</p>
         </div>
 
             </div>
