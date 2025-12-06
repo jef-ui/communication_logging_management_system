@@ -511,7 +511,7 @@ const municipalities = {
     "Marinduque Province": ["Boac","Gasan","Mogpog","Santa Cruz","Torrijos","Buenavista"],
     "Oriental Mindoro Province": ["Calapan","Baco","Naujan","Victoria","Socorro","Pola","Puerto Galera","San Teodoro","Bansud","Gloria","Pinamalayan","Roxas","Bulalacao"],
     "Occidental Mindoro Province": ["Mamburao","San Jose","Rizal","Calintaan","Sablayan","Santa Cruz","Abra de Ilog","Looc","Lubang"],
-    "Romblon Province": ["Romblon","Odiongan","Cajidiocan","Magdiwang","San Fernando","San Agustin","Santa Maria","Corcuera","Banton","Concepcion","Ferrol","Alcantara","Looc"],
+    "Romblon Province": ["Romblon","Odiongan","Cajidiocan","Magdiwang","San Fernando","San Agustin","Santa Maria","Corcuera","Banton","Concepcion","Ferrol","Alcantara","Looc", "Calatrava"],
     "Palawan Province": ["Puerto Princesa","Aborlan","Narra","Quezon","Rizal","Brooke's Point","Bataraza","Sofronio Espanola","Roxas","San Vicente","Taytay","El Nido","Dumaran","Araceli","Kawayan","Linapacan","Cuyo","Agutaya","Magsaysay","Kalayaan","Balabac","Coron","Busuanga","Culion"]
 };
 
