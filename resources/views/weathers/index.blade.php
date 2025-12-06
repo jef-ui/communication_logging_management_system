@@ -144,7 +144,7 @@
             width: 25%;
             height: 400px;
             border: 1px solid #2B2B2B;
-            background-color: blue;
+            background-color: red;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -460,7 +460,7 @@ setTimeout(checkDZMM, 2000);
 
          <div class="secondary-card-alert" >
                 <h4 class="windy" style="color: rgb(215, 215, 215">RDRRMC MIMAROPA Alert Status</h4>
-                <h1 class="alert-level" style="margin: auto ;">BLUE</h1>
+                <h1 class="alert-level" style="margin: auto ;">RED</h1>
             </div>
         </div>  
 
